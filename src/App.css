@@ -1,0 +1,116 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.App {
+  background-color: #323842;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: row;
+  align-items:flex-start;
+  font-size: calc(20px);
+  color: white;
+}
+
+.Channels-container {
+  min-height: 100vh;
+  min-width: 80px;
+  background-color: #5e6677;
+  display: flex;
+  flex-direction: column;
+}
+
+.Channel {
+  width: 60px;
+  height: 60px;
+  margin: 10px;
+  border-radius: 30px;
+  cursor: pointer;
+}
+
+.Chats-container {
+  min-height: 100vh;
+  width: 350px;
+  background-color: #4a515f;
+}
+
+.Chat {
+  height: 30px;
+  width: 310px;
+  margin: 10px;
+  border-radius: 10px;
+  background-color: #5e6677;
+  padding: 0 10px;
+  cursor: pointer;
+}
+
+.Chat-inputcontainer {
+  max-width:100%;
+  padding: 10px;
+  display: flex;
+  flex-flow: row nowrap;
+}
+
+.Chat-input {
+  background-color: #58606e;
+  border-radius: 10xp;
+  width: 100%;
+}
+
+.Chat-history {
+  max-height: 90vh;
+  width: 100%;
+  background-color: #323842;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.Message {
+  min-height:30px;
+  width: fill;
+  max-width: calc();
+  margin: 10px;
+  padding: 0 10px 0 0; 
+  border-radius: 10px;
+  background-color: #58606e;
+  display: flex;
+  flex-flow: row nowrap;
+}
+
+.Message-textcontainer {
+  display: flex;
+  flex-flow: column nowrap;
+}
+
+.Message-avatar {
+  width: 60px;
+  height: 60px;
+  margin: 10px;
+  border-radius: 30px;
+}
+
+.Message-username {
+  font-size: calc(30px);
+}
+
+.Message-text {
+  word-wrap: break-word;
+  word-break: break-all;
+  margin-bottom: 10px;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+
