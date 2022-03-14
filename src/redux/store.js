@@ -1,7 +1,7 @@
 import { createStore } from 'redux'
 import reducers from './reducers'
 
-export default () => {
-  const store = createStore(reducers)
-  return { store }
-}
+const store = createStore(reducers);
+store.subscribe(() => console.log(store.getState()))
+
+export default store

@@ -5,6 +5,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #323842;
 }
 
 code {
@@ -12,8 +13,11 @@ code {
     monospace;
 }
 
+img:before {
+  background-image: url(./pics/danny.jpg);
+}
+
 .App {
-  background-color: #323842;
   min-height: 100vh;
   display: flex;
   flex-direction: row;
@@ -30,7 +34,7 @@ code {
   flex-direction: column;
 }
 
-.ChannelIMG {
+.Channel-image {
   width: 60px;
   height: 60px;
   margin: 10px;
@@ -44,6 +48,15 @@ code {
   background-color: #4a515f;
 }
 
+.Chats-userprofile-container {
+  width:100%;
+  height: 8vh;
+  font-size: calc(25px);;
+  display: flex;
+  flex-flow: row nowrap;
+  vertical-align: middle;
+}
+
 .Chat {
   height: 30px;
   width: 310px;
@@ -54,13 +67,21 @@ code {
   cursor: pointer;
 }
 
-.Chat-elementsContainer {
+.Chat-elements-container {
   width: 100%;
   display: flex;
   flex-flow: column nowrap;
 }
 
-.Chat-inputcontainer {
+.Chat-info-container {
+  width:100%;
+  height: 8vh;
+  font-size: calc(25px);
+  background-color: #4a515f;
+  vertical-align: middle;
+}
+
+.Chat-input-container {
   max-width:100%;
   max-height: 7vh;
   padding: 10px;
@@ -79,7 +100,7 @@ code {
   display: flex;
   flex-flow: column nowrap;
   align-items: flex-end;
-  max-height: 93vh;
+  max-height: 85vh;
   width: 100%;
   background-color: #323842;
   overflow-y: auto;
@@ -106,12 +127,12 @@ code {
   align-self: flex-start;
 }
 
-.Message-textcontainer {
+.Message-text-container {
   display: flex;
   flex-flow: column nowrap;
 }
 
-.Message-avatar {
+.avatar {
   width: 60px;
   height: 60px;
   margin: 10px;
@@ -119,7 +140,13 @@ code {
 }
 
 .Message-username {
-  font-size: calc(30px);
+  font-size: calc(25px);
+}
+
+.Message-datetime {
+  font-size: calc(15px);
+  color: #c2c2c2;
+  margin-left: 10px;
 }
 
 .Message-text {
@@ -142,4 +169,27 @@ code {
   bottom:0;
   left:0;
   padding: 5px 10px;
+}
+
+
+
+.userprofile {
+  width:100%;
+  height:100%
+}
+
+.userprofile .Chats-userprofile-container {
+  background-color: #4a515f;
+}
+
+.userprofile-fields-container {
+  top:20px;
+  right:0;
+  bottom:0;
+  left:0;
+  width: 500px;
+  margin: auto auto;
+  background-color: #5e6677;
+  border-radius: 10px;
+  padding: 2em;
 }

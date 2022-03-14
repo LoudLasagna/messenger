@@ -10,8 +10,8 @@ import {
   useState, React, useEffect, useRef
 } from 'react';
 import { Form, Button } from 'react-bootstrap';
+import { useSelector } from 'react-redux';
 import Message from './message';
-import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 let messages = [
@@ -62,7 +62,6 @@ let messages = [
   }
 ]
 
-const currentUser = 2;
 
 function getWindowDimensions() {
   const { innerWidth: width, innerHeight: height } = window;
@@ -72,9 +71,9 @@ function getWindowDimensions() {
   };
 }
 
-export default function Chat(props) {
-  // eslint-disable-next-line no-unused-vars
-  const { id } = props;
+export default function Chat() {
+  const activeChat = useSelector((store) => store.activeChat);
+  const currentUserId = useSelector((store) => store.currentUser.id);
 
   const messagesEnd = useRef(null);
 
@@ -92,9 +91,10 @@ export default function Chat(props) {
   const HandleSubmit = (event) => {
     let t = Tmessages.slice();
     t.push({
-      chatId: id,
-      userId: currentUser,
-      text: userInput
+      chatId: activeChat.id,
+      userId: currentUserId,
+      text: userInput,
+      datetime: new Date()
     })
     console.log(Tmessages);
     CM(t);
@@ -119,15 +119,18 @@ export default function Chat(props) {
 
   useEffect(() => {
     scrollToBottom()
-  }, [Tmessages, id])
+  }, [Tmessages, activeChat])
 
   return (
-    <div className="Chat-elementsContainer">
+    <div className="Chat-elements-container">
+      <div className="Chat-info-container">
+        {activeChat.name}
+      </div>
       <div className="Chat-history" style={{ height: windowDimensions.height }}>
         {
-          Tmessages.filter((elem) => elem.chatId === id).length > 0
-            ? (Tmessages.filter((elem) => elem.chatId === id).map((message) => (
-              <Message key={message.id} messageData={message} />
+          Tmessages.filter((elem) => elem.chatId === activeChat.id).length > 0
+            ? (Tmessages.filter((elem) => elem.chatId === activeChat.id).map((message, index) => (
+              <Message key={index} messageData={message} currentUser={currentUserId} />
             ))) : (
             // eslint-disable-next-line max-len
               <div className="SampleText"> You can be the first one to write in this chat! Dont miss this opportunity</div>
@@ -135,7 +138,7 @@ export default function Chat(props) {
         }
         <div style={{ float: 'left', clear: 'both' }} ref={messagesEnd} />
       </div>
-      <Form className="Chat-inputcontainer" onSubmit={HandleSubmit}>
+      <Form className="Chat-input-container" onSubmit={HandleSubmit}>
         <Form.Control type="text" className="Chat-input" value={userInput} onChange={HandleInput} />
         <Button variant="warning" type="submit">отправить</Button>
       </Form>

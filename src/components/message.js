@@ -1,3 +1,4 @@
+/* eslint-disable react/destructuring-assignment */
 /* eslint-disable spaced-comment */
 /* eslint-disable no-multiple-empty-lines */
 /* eslint-disable react/no-array-index-key */
@@ -9,9 +10,8 @@
 import {
   React
 } from 'react';
-import './App.css';
-import gorg from './pics/gorg.jpg';
-import danny from './pics/danny.jpg';
+import gorg from '../pics/gorg.jpg';
+import danny from '../pics/danny.jpg';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const userdata = [
@@ -29,17 +29,17 @@ const userdata = [
   }
 ]
 
-const currentUser = 2;
-
 export default function Message(props) {
-  // eslint-disable-next-line react/destructuring-assignment
-  const { userId, text } = props.messageData;
-
+  const { userId, text, datetime } = props.messageData;
+  const { currentUser } = props;
   return (
     <div className={userId === currentUser ? 'Message UM' : 'Message'}>
-      <img className="Message-avatar" alt="a" src={userdata.find((user) => user.id === userId).avatar} />
-      <div className="Message-textcontainer">
-        <div className="Message-username">{userdata.find((user) => user.id === userId).login}</div>
+      <img className="avatar" alt="a" src={userdata.find((user) => user.id === userId).avatar} />
+      <div className="Message-text-container">
+        <div className="Message-username">
+          {userdata.find((user) => user.id === userId).login}
+          <var className="Message-datetime">{datetime ? datetime.toLocaleDateString() : ''}</var>
+        </div>
         <div className="Message-text">
           {text}
         </div>
