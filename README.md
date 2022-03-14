@@ -1,3 +1,4 @@
 мессенджер
 
-npm install/yarn install
+npm install
+npm start
