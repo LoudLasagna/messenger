@@ -1,0 +1,19 @@
+{
+  "name": "messenger-f",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "server": "npm --cwd server start",
+    "client": "npm --cwd client start",
+    "start": "concurrently \"(npm start --prefix client)\" \"(npm start --prefix server)\"",
+    "install": "concurrently \"(npm install --prefix client)\" \"(npm install --prefix server)\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "concurrently": "^7.0.0",
+    "nanoid": "^3.3.1"
+  }
+}
