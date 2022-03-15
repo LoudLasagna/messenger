@@ -10,34 +10,17 @@
 import {
   React
 } from 'react';
-import gorg from '../pics/gorg.jpg';
-import danny from '../pics/danny.jpg';
 import 'bootstrap/dist/css/bootstrap.min.css';
-
-const userdata = [
-  {
-    id: 1,
-    avatar: gorg,
-    login: 'nexman',
-    password: 'qwerty'
-  },
-  {
-    id: 2,
-    avatar: danny,
-    login: 'nexman2',
-    password: 'qwerty'
-  }
-]
 
 export default function Message(props) {
   const { userId, text, datetime } = props.messageData;
-  const { currentUser } = props;
+  const { currentUser, senderData } = props;
   return (
     <div className={userId === currentUser ? 'Message UM' : 'Message'}>
-      <img className="avatar" alt="a" src={userdata.find((user) => user.id === userId).avatar} />
+      <img className="avatar" alt="a" src={senderData.avatar} />
       <div className="Message-text-container">
         <div className="Message-username">
-          {userdata.find((user) => user.id === userId).login}
+          {senderData.login}
           <var className="Message-datetime">{datetime ? datetime.toLocaleDateString() : ''}</var>
         </div>
         <div className="Message-text">

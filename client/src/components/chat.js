@@ -11,8 +11,18 @@ import {
 } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+
+import { Picker } from 'emoji-mart';
+import { FiSend } from 'react-icons/fi';
+import { GrEmoji } from 'react-icons/gr';
+
 import Message from './message';
+import gorg from '../pics/gorg.jpg';
+import danny from '../pics/danny.jpg';
+import cross from '../pics/cross.png';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'emoji-mart/css/emoji-mart.css';
 
 let messages = [
   {
@@ -62,6 +72,20 @@ let messages = [
   }
 ]
 
+const users = [
+  {
+    id: 1,
+    avatar: gorg,
+    login: 'nexman',
+    password: 'qwerty'
+  },
+  {
+    id: 2,
+    avatar: danny,
+    login: 'nexman2',
+    password: 'qwerty'
+  }
+]
 
 function getWindowDimensions() {
   const { innerWidth: width, innerHeight: height } = window;
@@ -78,8 +102,16 @@ export default function Chat() {
   const messagesEnd = useRef(null);
 
   const [userInput, ChangeInput] = useState('');
-
   const [Tmessages, CM] = useState(messages); /////////////////
+
+  const [showEmoji, setShowEmoji] = useState(false);
+  const handleEmojiShow = () => {
+    setShowEmoji((v) => !v)
+  }
+  const handleEmojiSelect = (e) => {
+    // eslint-disable-next-line no-shadow
+    ChangeInput(userInput + e.native)
+  }
 
   const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions());
   const HandleInput = (event) => {
@@ -124,13 +156,21 @@ export default function Chat() {
   return (
     <div className="Chat-elements-container">
       <div className="Chat-info-container">
-        {activeChat.name}
+        <Link to="/chatinfo">
+          <img className="avatar" src={cross} alt="av" />
+          {activeChat.name}
+        </Link>
       </div>
       <div className="Chat-history" style={{ height: windowDimensions.height }}>
         {
           Tmessages.filter((elem) => elem.chatId === activeChat.id).length > 0
             ? (Tmessages.filter((elem) => elem.chatId === activeChat.id).map((message, index) => (
-              <Message key={index} messageData={message} currentUser={currentUserId} />
+              <Message
+                key={index}
+                messageData={message}
+                currentUser={currentUserId}
+                senderData={users.find((elem) => elem.id === message.userId)}
+              />
             ))) : (
             // eslint-disable-next-line max-len
               <div className="SampleText"> You can be the first one to write in this chat! Dont miss this opportunity</div>
@@ -139,9 +179,15 @@ export default function Chat() {
         <div style={{ float: 'left', clear: 'both' }} ref={messagesEnd} />
       </div>
       <Form className="Chat-input-container" onSubmit={HandleSubmit}>
+        <Button variant="primary" type="button" onClick={handleEmojiShow}>
+          <GrEmoji />
+        </Button>
         <Form.Control type="text" className="Chat-input" value={userInput} onChange={HandleInput} />
-        <Button variant="warning" type="submit">отправить</Button>
+        <Button variant="success" type="submit">
+          <FiSend />
+        </Button>
       </Form>
+      {showEmoji && <Picker set="apple" theme="dark" style={{ position: 'absolute', bottom: '6vh', left: '340px' }} onSelect={handleEmojiSelect} emojiSize={20} />}
     </div>
   );
 }

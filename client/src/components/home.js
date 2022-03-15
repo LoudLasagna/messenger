@@ -11,6 +11,7 @@ import {
 } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
+import cross from '../pics/cross.png';
 import Chat from './chat';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -18,7 +19,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 let chats = [
   {
     id: '1-1',
-    name: 'тест1',
+    name: 'cunny',
+    avatar: cross,
     members: [
       1,
       2
@@ -27,6 +29,7 @@ let chats = [
   {
     id: '1-2',
     name: 'тест2',
+    avatar: cross,
     members: [
       1,
       2,
@@ -36,6 +39,7 @@ let chats = [
   {
     id: '1-3',
     name: 'тест3',
+    avatar: cross,
     members: [
       1,
       2
@@ -68,7 +72,10 @@ function Home() {
         </div>
         { ////// fetch chats
             chats.map((chat) => (
-              <div key={chat.id} className="Chat" onClick={() => ChatOnClick(chat.id)}>{chat.name}</div>
+              <div key={chat.id} className="Chat" onClick={() => ChatOnClick(chat.id)}>
+                <img src={cross} className="chat-avatar" alt="chat-av" />
+                {chat.name}
+              </div>
             ))
           }
       </div>

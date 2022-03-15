@@ -8,13 +8,22 @@ body {
   background-color: #323842;
 }
 
+a {
+  color: white;
+  text-decoration: none;
+}
+
+a:hover {
+  color: lightgrey
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
 
 img:before {
-  background-image: url(./pics/danny.jpg);
+  background-image: url(./pics/cross.png);
 }
 
 .App {
@@ -45,26 +54,37 @@ img:before {
 .Chats-container {
   min-height: 100vh;
   width: 330px;
-  background-color: #4a515f;
+  background-color: #404652;
 }
 
 .Chats-userprofile-container {
+  background-color: #4a515f;
   width:100%;
   height: 8vh;
   font-size: calc(25px);;
   display: flex;
   flex-flow: row nowrap;
   vertical-align: middle;
+  align-items: center
 }
 
 .Chat {
-  height: 30px;
   width: 310px;
   margin: 10px;
   border-radius: 10px;
   background-color: #5e6677;
-  padding: 0 10px;
+  padding: 5px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  vertical-align: middle;
+}
+
+.chat-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin-right: 5px;
 }
 
 .Chat-elements-container {
@@ -79,6 +99,11 @@ img:before {
   font-size: calc(25px);
   background-color: #4a515f;
   vertical-align: middle;
+  text-align: center;
+}
+
+.Chat-info-container a {
+  height: 8vh;
 }
 
 .Chat-input-container {
@@ -91,8 +116,6 @@ img:before {
 
 .Chat-input {
   background-color: #58606e;
-  border-top-left-radius: 10px;
-  border-bottom-left-radius: 10px;
   width: 100%;
 }
 
@@ -136,7 +159,7 @@ img:before {
   width: 60px;
   height: 60px;
   margin: 10px;
-  border-radius: 30px;
+  border-radius: 50%;
 }
 
 .Message-username {
@@ -171,7 +194,9 @@ img:before {
   padding: 5px 10px;
 }
 
-
+.userprofile-link {
+  width:100%
+}
 
 .userprofile {
   width:100%;
@@ -183,13 +208,23 @@ img:before {
 }
 
 .userprofile-fields-container {
-  top:20px;
+  top:0;
   right:0;
   bottom:0;
   left:0;
-  width: 500px;
-  margin: auto auto;
+  width: 60%;
+  margin: 10px auto;
   background-color: #5e6677;
   border-radius: 10px;
   padding: 2em;
+}
+
+.userprofile-fields-container label, button, div {
+  font-size: calc(20px);
+  color: white;
+}
+
+.userprofile-fields-container div {
+  font-size: calc(30px);
+  color: white;
 }

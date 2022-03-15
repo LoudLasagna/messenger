@@ -20,6 +20,7 @@ ReactDOM.render(
         <Route path="/" element={<App />} />
         <Route path="/login" element={<Login />} />
         <Route path="/userprofile" element={<UserProfile />} />
+        <Route path="/chatinfo" element={<App />} />
       </Routes>
     </BrowserRouter>
   </Provider>,
