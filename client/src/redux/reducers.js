@@ -2,10 +2,7 @@ import gorg from '../pics/gorg.jpg';
 import danny from '../pics/danny.jpg';
 
 const defaultState = {
-  activeChat: {
-    id: '1-1',
-    name: 'cunny'
-  },
+  activeChat: {},
   currentUser: {},
 
   messages: [

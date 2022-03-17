@@ -19,7 +19,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 let chats = [
   {
     id: '1-1',
-    name: 'cunny',
+    name: 'arggarh',
     avatar: cross,
     members: [
       1,
