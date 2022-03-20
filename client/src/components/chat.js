@@ -156,37 +156,49 @@ export default function Chat() {
   return (
     <div className="Chat-elements-container">
       <div className="Chat-info-container">
+        {activeChat.id
+        && (
         <Link to="/chatinfo">
           <img className="avatar" src={cross} alt="av" />
           {activeChat.name}
         </Link>
+        )}
       </div>
       <div className="Chat-history" style={{ height: windowDimensions.height }}>
         {
-          Tmessages.filter((elem) => elem.chatId === activeChat.id).length > 0
-            ? (Tmessages.filter((elem) => elem.chatId === activeChat.id).map((message, index) => (
-              <Message
-                key={index}
-                messageData={message}
-                currentUser={currentUserId}
-                senderData={users.find((elem) => elem.id === message.userId)}
-              />
-            ))) : (
-            // eslint-disable-next-line max-len
-              <div className="SampleText"> You can be the first one to write in this chat! Dont miss this opportunity</div>
-            )
+          // eslint-disable-next-line no-nested-ternary
+          activeChat.id
+            ? Tmessages.filter((elem) => elem.chatId === activeChat.id).length > 0
+              ? (Tmessages.filter((elem) => elem.chatId === activeChat.id).map((message, index) => (
+                <Message
+                  key={index}
+                  messageData={message}
+                  currentUser={currentUserId}
+                  senderData={users.find((elem) => elem.id === message.userId)}
+                />
+              )))
+              : (
+                <div className="SampleText"> You can be the first one to write in this chat! Dont miss this opportunity</div>
+              )
+            : <div className="SampleText"> Select a chat to start a conversation! </div>
         }
         <div style={{ float: 'left', clear: 'both' }} ref={messagesEnd} />
       </div>
-      <Form className="Chat-input-container" onSubmit={HandleSubmit}>
-        <Button variant="primary" type="button" onClick={handleEmojiShow}>
-          <GrEmoji />
-        </Button>
-        <Form.Control type="text" className="Chat-input" value={userInput} onChange={HandleInput} />
-        <Button variant="success" type="submit">
-          <FiSend />
-        </Button>
-      </Form>
+      {
+        // eslint-disable-next-line no-nested-ternary
+        activeChat.id
+          && (
+          <Form className="Chat-input-container" onSubmit={HandleSubmit}>
+            <Button variant="primary" type="button" onClick={handleEmojiShow}>
+              <GrEmoji />
+            </Button>
+            <Form.Control type="text" className="Chat-input" value={userInput} onChange={HandleInput} />
+            <Button variant="success" type="submit">
+              <FiSend />
+            </Button>
+          </Form>
+          )
+      }
       {showEmoji && <Picker set="apple" theme="dark" style={{ position: 'absolute', bottom: '6vh', left: '340px' }} onSelect={handleEmojiSelect} emojiSize={20} />}
     </div>
   );
