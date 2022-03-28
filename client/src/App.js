@@ -1,20 +1,29 @@
+/* eslint-disable no-unused-vars */
 import {
-  React
+  React,
+  useRef,
+  useState
 } from 'react';
 // eslint-disable-next-line no-unused-vars
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { Navigate } from 'react-router-dom';
 import Home from './components/home';
 import Login from './components/login';
-import './App.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import { SocketProvider } from './contexts/SocketProvider';
+import useBeforeUnload from './hooks/useBeforeUnload';
+import useLocalStorage from './hooks/useLocalStorage';
 
 function App() {
   const userData = useSelector((state) => state.currentUser)
-  return ( // надо сделать сначала проверку соответствия локалькой куки куке на сервере
-    <div className="App">
-      {userData.id ? <Home /> : <Login />}
-    </div>
-  );
+  const [storageEmail, setstorageEmail] = useLocalStorage('email');
+
+  return (
+    <SocketProvider id={storageEmail}>
+      <div className="App">
+        { userData.login ? <Home /> : <Login />}
+      </div>
+    </SocketProvider>
+  )
 }
 
 export default App;

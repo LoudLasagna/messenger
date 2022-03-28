@@ -1,62 +1,55 @@
 /* eslint-disable no-unused-vars */
 import { useEffect, useRef, useState } from 'react'
+import { useSelector } from 'react-redux'
 import io from 'socket.io-client'
 import { nanoid } from 'nanoid'
-import useLocalstorage from './useLocalStorage'
+import { useSocket } from '../contexts/SocketProvider'
 import useBeforeUnload from './useBeforeUnload'
 
 const SERVER_URL = 'http://localhost:5000'
 
-const useChat = (roomId) => {
+export default function useChat(chatId) {
   const [users, setUsers] = useState([])
   const [messages, setMessages] = useState([])
 
-  const [userId] = useLocalstorage('userId', nanoid(8))
-  const [username] = useLocalstorage('username')
+  const [username] = useSelector((store) => store.currentUser.login || '-1')
+  const [userEmail] = useSelector((store) => store.currentUser.email || '-1')
 
-  const socketRef = useRef(null)
+  const socket = useSocket();
 
   useEffect(() => {
-    socketRef.current = io(SERVER_URL, {
-      query: { roomId }
-    })
-
-    socketRef.current.emit('user:add', { username, userId })
-
-    socketRef.current.on('users', (usrs) => {
+    socket.current.on('users', (usrs) => {
       setUsers(usrs)
     })
 
-    socketRef.current.emit('message:get')
+    socket.current.emit('message:get', { chatId })
 
-    socketRef.current.on('messages', (msgs) => {
-      const newMessages = msgs.map((msg) => (msg.userId === userId
+    socket.current.on('messages', (msgs) => {
+      const newMessages = msgs.map((msg) => (msg.userId === userEmail
         ? { ...msg, currentUser: true }
         : msg
       ))
       setMessages(newMessages)
     })
+  }, [chatId, userEmail, username])
 
-    return () => {
-      socketRef.current.disconnect()
-    }
-  }, [roomId, userId, username])
-
-  const sendMessage = ({ messageText, senderName }) => {
-    socketRef.current.emit('message:add', {
-      userId,
-      messageText,
-      senderName
+  const sendMessage = ({ text }) => {
+    socket.current.emit('message:add', {
+      chatId,
+      senderName: username,
+      text
     })
   }
 
   const removeMessage = (id) => {
-    socketRef.current.emit('message:remove', id)
+    socket.current.emit('message:remove', id)
   }
 
+  /*
   useBeforeUnload(() => {
     socketRef.current.emit('user:leave', userId)
   })
+  */
 
   return {
     users,

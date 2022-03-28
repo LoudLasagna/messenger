@@ -10,10 +10,12 @@
 import {
   React
 } from 'react';
+import TimeAgo from 'react-timeago'
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+
 export default function Message(props) {
-  const { userId, text, datetime } = props.messageData;
+  const { userId, text, createdAt } = props.messageData;
   const { currentUser, senderData } = props;
   return (
     <div className={userId === currentUser ? 'Message UM' : 'Message'}>
@@ -21,7 +23,7 @@ export default function Message(props) {
       <div className="Message-text-container">
         <div className="Message-username">
           {senderData.login}
-          <var className="Message-datetime">{datetime ? datetime.toLocaleDateString() : ''}</var>
+          {createdAt && <TimeAgo className="Message-datetime" date={createdAt} />}
         </div>
         <div className="Message-text">
           {text}

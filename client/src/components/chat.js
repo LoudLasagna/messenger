@@ -1,3 +1,5 @@
+/* eslint-disable max-len */
+/* eslint-disable no-unused-vars */
 /* eslint-disable spaced-comment */
 /* eslint-disable no-multiple-empty-lines */
 /* eslint-disable react/no-array-index-key */
@@ -9,7 +11,7 @@
 import {
   useState, React, useEffect, useRef
 } from 'react';
-import { Form, Button } from 'react-bootstrap';
+import { Form, Button, Modal } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
@@ -17,6 +19,7 @@ import { Picker } from 'emoji-mart';
 import { FiSend } from 'react-icons/fi';
 import { GrEmoji } from 'react-icons/gr';
 
+import { useSocket } from '../contexts/SocketProvider';
 import Message from './message';
 import gorg from '../pics/gorg.jpg';
 import danny from '../pics/danny.jpg';
@@ -24,63 +27,15 @@ import cross from '../pics/cross.png';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'emoji-mart/css/emoji-mart.css';
 
-let messages = [
-  {
-    chatId: '1-1',
-    userId: 1,
-    text: 'im just trying to do this shit'
-  },
-  {
-    chatId: '1-1',
-    userId: 1,
-    text: 'im just trying to do this shit'
-  },
-  {
-    chatId: '1-1',
-    userId: 1,
-    text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas tristique, elit vel mollis vestibulum, ante lectus mattis nunc, vel porta lacus ex vel magna. Pellentesque fringilla tortor sit amet leo congue, quis tincidunt magna varius. Nam magna tellus, sodales eu ipsum nec, finibus commodo arcu. Interdum et malesuada fames ac ante ipsum primis in faucibus. Morbi efficitur dolor lorem, nec egestas arcu euismod sit amet. Curabitur nisi diam, eleifend at tellus eget, vestibulum vehicula magna. Duis a maximus erat, ac bibendum mi. Duis volutpat velit a dapibus molestie. Suspendisse blandit eu diam vel mollis. Nullam pharetra ex eget enim euismod, ac tincidunt erat maximus. Suspendisse maximus in justo a hendrerit. Cras diam orci, consequat vitae rutrum ac, convallis aliquet nibh. Nulla eget ornare nunc. Aenean aliquet quam sit amet tempor vestibulum. Nulla cursus augue eros, ut facilisis neque consectetur nec. Praesent elit metus, lobortis ut ultricies vel, placerat et nibh. Proin tincidunt ipsum vitae urna eleifend, id blandit purus consequat. Fusce varius nibh at tellus semper viverra. Quisque pharetra, dui non ornare molestie, nisi massa sagittis nulla, eget pretium erat risus non quam. Ut ultricies dignissim ligula, in sollicitudin arcu iaculis vitae. Vivamus molestie tempus sapien non volutpat. Nunc consectetur ex eget purus volutpat egestas vel sit amet odio. Donec aliquam nisl et turpis placerat fringilla. Ut ut tortor massa. Suspendisse at massa turpis. Nullam imperdiet id enim a tempor. Donec euismod nibh nec velit sagittis tristique. Fusce euismod malesuada eros ut efficitur. Praesent feugiat orci at lacus dignissim ullamcorper nec dictum lorem. Aenean eget nisi dolor.'
-  },
-  {
-    chatId: '1-1',
-    userId: 1,
-    text: 'im just trying to do thsadhgfasojfdjsadasdsadjvgasdasufdasduasl djafdasdfjkfasgab jkjhdsbafkjbjsdbfbjadbf kadsjb fjasdbfkjdfkjsodsafajdfasjfdkjasfdjasfdkjlkasdkjvasjkldvhasvjdjavsdkjvasdjkvaskjvasjkdsavdsakis shit'
-  },
-  {
-    chatId: '1-1',
-    userId: 1,
-    text: 'im just trying to do thsadhgfasojfdjsadasdsadjvgasdasufdasduasl djafdasdfjkfasgab jkjhdsbafkjbjsdbfbjadbf kadsjb fjasdbfkjdfkjsodsafajdfasjfdkjasfdjasfdkjlkasdkjvasjkldvhasvjdjavsdkjvasdjkvaskjvasjkdsavdsakis shit'
-  },
-  {
-    chatId: '1-1',
-    userId: 1,
-    text: 'im just trying to do thsadhgfasojfdjsadasdsadjvgasdasufdasduasl djafdasdfjkfasgab jkjhdsbafkjbjsdbfbjadbf kadsjb fjasdbfkjdfkjsodsafajdfasjfdkjasfdjasfdkjlkasdkjvasjkldvhasvjdjavsdkjvasdjkvaskjvasjkdsavdsakis shit'
-  },
-  {
-    chatId: '1-1',
-    userId: 1,
-    text: 'im just trying to do thsadhgfasojfdjsadasdsadjvgasdasufdasduasl djafdasdfjkfasgab jkjhdsbafkjbjsdbfbjadbf kadsjb fjasdbfkjdfkjsodsafajdfasjfdkjasfdjasfdkjlkasdkjvasjkldvhasvjdjavsdkjvasdjkvaskjvasjkdsavdsakis shit'
-  },
-  {
-    chatId: '1-1',
-    userId: 2,
-    text: 'im just trying to do this shit'
-  },
-  {
-    chatId: '1-1',
-    userId: 2,
-    text: 'im just trying to do thsadhgfasojfdjsadasdsadjvgasdasufdasduasl djafdasdfjkfasgab jkjhdsbafkjbjsdbfbjadbf kadsjb fjasdbfkjdfkjsodsafajdfasjfdkjasfdjasfdkjlkasdkjvasjkldvhasvjdjavsdkjvasdjkvaskjvasjkdsavdsakis shit'
-  }
-]
-
 const users = [
   {
-    id: 1,
+    id: '1',
     avatar: gorg,
     login: 'nexman',
     password: 'qwerty'
   },
   {
-    id: 2,
+    id: '2',
     avatar: danny,
     login: 'nexman2',
     password: 'qwerty'
@@ -95,14 +50,69 @@ function getWindowDimensions() {
   };
 }
 
+function useChat(chatId) {
+  const [lusers, setUsers] = useState([])
+  const [messages, setMessages] = useState([])
+
+  const [username] = useSelector((store) => store.currentUser.login || '-1')
+  const [userEmail] = useSelector((store) => store.currentUser.email || '-1')
+
+  const socket = useSocket();
+
+  useEffect(() => {
+    socket.on('users', (usrs) => {
+      setUsers(usrs)
+    })
+
+    socket.emit('message:get', { chatId })
+
+    socket.on('messages', (msgs) => {
+      const newMessages = msgs.map((msg) => (msg.userId === userEmail
+        ? { ...msg, currentUser: true }
+        : msg
+      ))
+      setMessages(newMessages)
+    })
+  }, [chatId, userEmail, username])
+
+  const sendMessage = ({ text }) => {
+    console.log(
+      chatId,
+      username,
+      text
+    );
+    socket.emit('message:add', {
+      chatId,
+      senderName: username,
+      text
+    })
+  }
+
+  const removeMessage = (id) => {
+    socket.emit('message:remove', id)
+  }
+
+  return {
+    lusers,
+    messages,
+    sendMessage,
+    removeMessage
+  }
+}
+
 export default function Chat() {
   const activeChat = useSelector((store) => store.activeChat);
   const currentUserId = useSelector((store) => store.currentUser.id);
 
+  const chatHook = useChat(activeChat.id);
+  // console.log(chatHook);
+
   const messagesEnd = useRef(null);
+  const [showChatDetails, setShowChatDetails] = useState(false);
+  const handleClose = () => setShowChatDetails(false);
+  const handleShow = () => setShowChatDetails(true);
 
   const [userInput, ChangeInput] = useState('');
-  const [Tmessages, CM] = useState(messages); /////////////////
 
   const [showEmoji, setShowEmoji] = useState(false);
   const handleEmojiShow = () => {
@@ -121,16 +131,8 @@ export default function Chat() {
   }
 
   const HandleSubmit = (event) => {
-    let t = Tmessages.slice();
-    t.push({
-      chatId: activeChat.id,
-      userId: currentUserId,
-      text: userInput,
-      datetime: new Date()
-    })
-    console.log(Tmessages);
-    CM(t);
     ChangeInput('');
+    chatHook.sendMessage({ text: userInput })
 
     scrollToBottom();
     event.preventDefault();
@@ -151,30 +153,31 @@ export default function Chat() {
 
   useEffect(() => {
     scrollToBottom()
-  }, [Tmessages, activeChat])
+  }, [messagesEnd.current])
 
   return (
     <div className="Chat-elements-container">
       <div className="Chat-info-container">
         {activeChat.id
         && (
-        <Link to="/chatinfo">
+        <a onClick={handleShow}>
           <img className="avatar" src={cross} alt="av" />
           {activeChat.name}
-        </Link>
+        </a>
         )}
       </div>
       <div className="Chat-history" style={{ height: windowDimensions.height }}>
         {
           // eslint-disable-next-line no-nested-ternary
           activeChat.id
-            ? Tmessages.filter((elem) => elem.chatId === activeChat.id).length > 0
-              ? (Tmessages.filter((elem) => elem.chatId === activeChat.id).map((message, index) => (
+            ? chatHook.messages.filter((elem) => elem.chatId === activeChat.id).length > 0
+              ? (chatHook.messages.map((message, index) => (
                 <Message
+                  ref={index === chatHook.messages.length - 1 ? messagesEnd : null}
                   key={index}
                   messageData={message}
                   currentUser={currentUserId}
-                  senderData={users.find((elem) => elem.id === message.userId)}
+                  senderData={users.find((elem) => elem.email === message.email)}
                 />
               )))
               : (
@@ -182,11 +185,10 @@ export default function Chat() {
               )
             : <div className="SampleText"> Select a chat to start a conversation! </div>
         }
-        <div style={{ float: 'left', clear: 'both' }} ref={messagesEnd} />
       </div>
       {
         // eslint-disable-next-line no-nested-ternary
-        activeChat.id
+        activeChat.id && activeChat.id !== '-1'
           && (
           <Form className="Chat-input-container" onSubmit={HandleSubmit}>
             <Button variant="primary" type="button" onClick={handleEmojiShow}>
@@ -200,6 +202,40 @@ export default function Chat() {
           )
       }
       {showEmoji && <Picker set="apple" theme="dark" style={{ position: 'absolute', bottom: '6vh', left: '340px' }} onSelect={handleEmojiSelect} emojiSize={20} />}
+      <Modal show={showChatDetails} onHide={handleClose} centered>
+        <Modal.Header closeButton className="info-container">
+          <Modal.Title>{activeChat.name}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="info-container">Woohoo, youre reading this text in a modal!</Modal.Body>
+        <Modal.Footer className="info-container" />
+      </Modal>
     </div>
   );
 }
+
+/*
+    let t = Tmessages.slice();
+    t.push({
+      chatId: activeChat.id,
+      userId: currentUserId,
+      text: userInput,
+      datetime: new Date()
+    })
+    console.log(Tmessages);
+    CM(t);
+  const [Tmessages, CM] = useState(messages); /////////////////
+? Tmessages.filter((elem) => elem.chatId === activeChat.id).length > 0
+    ? (Tmessages.filter((elem) => elem.chatId === activeChat.id).map((message, index) => (
+      <Message
+        key={index}
+        messageData={message}
+        currentUser={currentUserId}
+        senderData={users.find((elem) => elem.id === message.userId)}
+      />
+    )))
+    : (
+      <div className="SampleText"> You can be the first one to write in this chat! Dont miss this opportunity</div>
+    )
+  : <div className="SampleText"> Select a chat to start a conversation! </div>
+*/
+

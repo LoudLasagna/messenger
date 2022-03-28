@@ -1,13 +1,13 @@
 {
     "users": [
         {
-        "id": 1,
+        "id": "1",
         "avatar": "gorg",
         "login": "nexman",
         "password": "qwerty"
         },
         {
-        "id": 2,
+        "id": "2",
         "avatar": "danny",
         "login": "nexman2",
         "password": "qwerty"

@@ -42,14 +42,12 @@ const onConnection = (socket) => {
   log('User connected')
     
   const { sessionId } = socket.handshake.query
-  log('Sid: ' + sessionId)
+  console.log('Sid: ' + sessionId)
   socket.sessionId = sessionId
   socket.join(sessionId)
 
   registerMessageHandler(io, socket)
   registerUsersHandler(io, socket)
-
-  socket.onAny((eventName) => log(eventName))
 
   socket.on('disconnect', () => {
     log('User disconnected')

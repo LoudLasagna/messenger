@@ -2,99 +2,199 @@ import {
   React,
   useState
 } from 'react';
-import { Form, Button } from 'react-bootstrap';
+import { Form, Button, Modal } from 'react-bootstrap';
 import { useSelector, useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
 import { FiEye } from 'react-icons/fi';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function UserProfile() {
-  const userData = useSelector((state) => state.currentUser);
-  const dispatch = useDispatch();
-  const [edit, setEdit] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const userData = useSelector((state) => state.currentUser)
+  const dispatch = useDispatch()
+  const [edit, setEdit] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
+  const [changePassword, setChangePassword] = useState(false)
+  const [showNewPassword, setShowNewPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
-  const [login, changeLogin] = useState(userData.login);
-  const [email, changeEmail] = useState(userData.email);
-  const [password, changePassword] = useState('');
-  const [confirmPassword, changeConfirmPassword] = useState('');
+  const [fields, setFields] = useState({
+    login: userData.login,
+    email: userData.email,
+    password: '',
+    newPassword: '',
+    checkNewPassword: ''
+  })
+
+  const [validated, setValidated] = useState(false)
+  const [errors, setErrors] = useState({});
+
+  const validateInput = () => {
+    let formIsValid = true;
+    const tErrors = {}
+
+    if (!fields.password && fields.password.length < 6) {
+      formIsValid = false;
+      tErrors.password = 'Длина пароля должна быть как минимум 6 символов';
+    }
+    if (!fields.newPassword && fields.newPassword.length < 6) {
+      formIsValid = false;
+      tErrors.newPassword = 'Длина пароля должна быть как минимум 6 символов';
+    }
+    if (!fields.checkNewPassword && fields.checkNewPassword.length < 6) {
+      formIsValid = false;
+      tErrors.checkNewPassword = 'Длина пароля должна быть как минимум 6 символов';
+    }
+    if (fields.newPassword !== fields.checkNewPassword) {
+      formIsValid = false;
+      tErrors.newPassword = 'Пароли не совпадают';
+      tErrors.checkNewPassword = 'Пароли не совпадают';
+    }
+
+    setErrors(tErrors);
+    return formIsValid;
+  }
+
+  const handleChange = (event) => {
+    const { target } = event;
+    const { value } = target;
+    const { name } = target;
+
+    const tFields = fields
+    tFields[name] = value
+
+    const fixPassword = (psw) => psw.replace(/(?!\w|\s)./g, '')
+      .replace(/\s+/g, ' ')
+      .replace(/^(\s*)([\W\w]*)(\b\s*$)/g, '$2')
+
+    switch (name) {
+      case 'password':
+        tFields.password = fixPassword(tFields.password)
+        break
+      case 'newPassword':
+        tFields.newPassword = fixPassword(tFields.newPassword)
+        break
+      case 'checkNewPassword':
+        tFields.checkNewPassword = fixPassword(tFields.checkNewPassword)
+        break
+      default:
+        break
+    }
+
+    setFields(tFields)
+    setValidated(validateInput())
+  }
 
   const confirmChanges = (e) => {
-    e.stopPropagation();
-    e.preventDefault();
-    setEdit(false);
-    dispatch({
-      type: 'CHANGE_USER',
-      user: {
-        ...userData,
-        login,
-        email,
-        password
-      }
-    })
+    e.stopPropagation()
+    e.preventDefault()
+
+    if (validated) {
+      dispatch({
+        type: 'CHANGE_USER',
+        user: {
+          ...userData,
+          login: fields.login,
+          email: fields.email,
+          password: fields.password
+        }
+      })
+    }
   }
 
   return (
-    <div className="userprofile">
-      <div className="Chats-userprofile-container">
-        <Link to="/" style={{ width: 330, margin: 10 }} className="userprofile-link">
-          Назад
-        </Link>
-      </div>
-      <Form className="userprofile-fields-container">
-        <div style={{
-          width: 'fit-content',
+    <Form className="info-container" style={{ borderRadius: 'inherit' }}>
+      <Modal.Header
+        style={{
+          width: '100%',
           display: 'flex',
           alignItems: 'center',
           top: 0,
           right: 0,
           bottom: 0,
           left: 0,
-          margin: '0 auto'
+          padding: '0 6%',
+          margin: '0 auto',
+          borderBottomColor: '#323842'
         }}
-        >
-          <img src={userData.avatar} style={{ height: 100, width: 100, marginRight: 30 }} alt="av" className="avatar" />
-          Профиль пользователя
-          {` ${userData.login}`}
-        </div>
+        closeButton
+      >
+        <img src={userData.avatar} style={{ height: 100, width: 100 }} alt="av" className="avatar" />
+        {fields.login}
+      </Modal.Header>
+      <Modal.Body>
         <Form.Group className="mb-3">
           <Form.Label>Login:</Form.Label>
-          <Form.Control type="text" disabled={!edit} placeholder="Change your Login" value={login} onChange={(e) => { changeLogin(e.target.value) }} />
+          <Form.Control type="text" name="login" disabled={!edit} placeholder="Change your Login" value={fields.login} onChange={handleChange} required />
+          <Form.Text style={{ color: 'red' }}>
+            {errors.login}
+          </Form.Text>
         </Form.Group>
         <Form.Group className="mb-3">
           <Form.Label>Email:</Form.Label>
-          <Form.Control type="email" disabled={!edit} placeholder="Change your Email" value={email} onChange={(e) => { changeEmail(e.target.value) }} />
+          <Form.Control type="email" name="email" disabled={!edit} placeholder="Change your Email" value={fields.email} onChange={handleChange} required />
+          <Form.Text style={{ color: 'red' }}>
+            {errors.email}
+          </Form.Text>
         </Form.Group>
         {edit && (
         <>
           <Form.Group className="mb-3">
             <Form.Label>Password:</Form.Label>
             <div style={{ display: 'flex', flexFlow: 'row nowrap', width: '100%' }}>
-              <Form.Control autoComplete="off" type={showPassword ? 'text' : 'password'} disabled={!edit} placeholder="You can even change your password!" value={password} onChange={(e) => { changePassword(e.target.value) }} />
+              <Form.Control autoComplete="off" type={showPassword ? 'text' : 'password'} name="password" disabled={!edit} placeholder="Your old password goes here" value={fields.password} onChange={handleChange} required />
               <Button variant="outline-light" onClick={() => setShowPassword((v) => !v)}>
                 <FiEye />
               </Button>
             </div>
+            <Form.Text style={{ color: 'red' }}>
+              {errors.password}
+            </Form.Text>
           </Form.Group>
-          <Form.Group className="mb-3">
-            <Form.Label>Confirm assword:</Form.Label>
-            <div style={{ display: 'flex', flexFlow: 'row nowrap', width: '100%' }}>
-              <Form.Control autoComplete="off" type={showConfirmPassword ? 'text' : 'password'} disabled={!edit} placeholder="This is where your mind will be put to the short memory test" value={confirmPassword} onChange={(e) => { changeConfirmPassword(e.target.value) }} />
-              <Button variant="outline-light" onClick={() => setShowConfirmPassword((v) => !v)}>
-                <FiEye />
-              </Button>
-            </div>
-          </Form.Group>
+          {changePassword
+          && (
+          <>
+            <Form.Group className="mb-3">
+              <Form.Label>New password:</Form.Label>
+              <div style={{ display: 'flex', flexFlow: 'row nowrap', width: '100%' }}>
+                <Form.Control autoComplete="off" type={showNewPassword ? 'text' : 'password'} name="newPassword" disabled={!edit} placeholder="You can even change your password!" value={fields.newPassword} onChange={handleChange} required />
+                <Button variant="outline-light" onClick={() => setShowNewPassword((v) => !v)}>
+                  <FiEye />
+                </Button>
+              </div>
+              <Form.Text style={{ color: 'red' }}>
+                {errors.newPassword}
+              </Form.Text>
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Confirm password:</Form.Label>
+              <div style={{ display: 'flex', flexFlow: 'row nowrap', width: '100%' }}>
+                <Form.Control autoComplete="off" type={showConfirmPassword ? 'text' : 'password'} name="checkNewPassword" disabled={!edit} placeholder="This is where your mind will be put to the short memory test" value={fields.confirmPassword} onChange={handleChange} required />
+                <Button variant="outline-light" onClick={() => setShowConfirmPassword((v) => !v)}>
+                  <FiEye />
+                </Button>
+              </div>
+              <Form.Text style={{ color: 'red' }}>
+                {errors.checkNewPassword}
+              </Form.Text>
+            </Form.Group>
+          </>
+          )}
         </>
         )}
+      </Modal.Body>
+      <Modal.Footer style={{ justifyContent: 'center', borderTopColor: '#323842' }}>
         {
         edit
-          ? <Button variant="primary" onClick={(event) => confirmChanges(event)}> Подтвердить изменения </Button>
+          ? (
+            <>
+              <Button variant="danger">Выйти</Button>
+              <Button variant="warning" onClick={() => setChangePassword((v) => !v)}>Изменить пароль</Button>
+              <Button variant="primary" onClick={confirmChanges}> Подтвердить изменения </Button>
+            </>
+          )
           : <Button variant="primary" onClick={() => setEdit(true)}> Изменить профиль </Button>
         }
-      </Form>
-    </div>
+      </Modal.Footer>
+    </Form>
   );
 }
 

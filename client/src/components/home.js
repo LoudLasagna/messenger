@@ -7,10 +7,13 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable prefer-const */
 import {
-  React
+  React,
+  useState
 } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { Modal } from 'react-bootstrap';
+import UserProfile from './userprofile';
 import cross from '../pics/cross.png';
 import Chat from './chat';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -53,6 +56,8 @@ function Home() {
   const chatData = useSelector((state) => state.activeChat);
   const userData = useSelector((state) => state.currentUser);
 
+  const [showUserProfile, setShowUserProfile] = useState(false);
+
   const ChatOnClick = (chatId) => {
     const clickedChat = chats.find((elem) => elem.id === chatId)
     dispatch({
@@ -61,25 +66,31 @@ function Home() {
     })
   }
 
+  const handleShow = () => setShowUserProfile(true);
+  const handleClose = () => setShowUserProfile(false);
+
   return (
     <>
       <div className="Chats-container">
         <div className="Chats-userprofile-container">
-          <Link to="/userprofile" className="userprofile-link">
+          <Link to="/userprofile" className="userprofile-link" onClick={handleShow}>
             <img className="avatar" src={userData.avatar} alt="av" />
             {userData.login}
           </Link>
         </div>
         { ////// fetch chats
-            chats.map((chat) => (
-              <div key={chat.id} className="Chat" onClick={() => ChatOnClick(chat.id)}>
-                <img src={cross} className="chat-avatar" alt="chat-av" />
-                {chat.name}
-              </div>
-            ))
-          }
+          chats.map((chat) => (
+            <div key={chat.id} className="Chat" onClick={() => ChatOnClick(chat.id)}>
+              <img src={cross} className="chat-avatar" alt="chat-av" />
+              {chat.name}
+            </div>
+          ))
+        }
       </div>
       <Chat props={chatData} />
+      <Modal show={showUserProfile} onHide={handleClose} centered>
+        <UserProfile handleClose={handleClose} />
+      </Modal>
     </>
   );
 }

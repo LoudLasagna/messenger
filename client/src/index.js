@@ -9,18 +9,18 @@ import {
 import { Provider } from 'react-redux';
 import store from './redux/store'
 import App from './App';
-import Home from './components/home';
 import Login from './components/login';
-import UserProfile from './components/userprofile';
+import './App.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 ReactDOM.render(
   <Provider store={store}>
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<App />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/userprofile" element={<UserProfile />} />
-        <Route path="/chatinfo" element={<App />} />
+        <Route path="/" element={<Login />} />
+        <Route path="/" element={<App />} />
+        <Route path="/" element={<App />} />
       </Routes>
     </BrowserRouter>
   </Provider>,

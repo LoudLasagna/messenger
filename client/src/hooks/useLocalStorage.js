@@ -1,16 +1,26 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react';
 
-const useLocalStorage = (key, initialValue) => {
+const PREFIX = 'messenger-d-';
+
+export default function useLocalStorage(key, initialValue) {
+  const prefixedKey = PREFIX + key;
   const [value, setValue] = useState(() => {
-    const item = window.localStorage.getItem(key)
-    return item ? JSON.parse(item) : initialValue
-  })
+    const jsonValue = localStorage.getItem(prefixedKey);
+    if (jsonValue != null) {
+      if (jsonValue === 'undefined') {
+        return null;
+      }
+      return JSON.parse(jsonValue);
+    }
+    if (typeof initialValue === 'function') {
+      return initialValue();
+    }
+    return initialValue;
+  });
 
   useEffect(() => {
-    const item = JSON.stringify(value)
-    window.localStorage.setItem(key, item)
-  }, [value])
+    localStorage.setItem(prefixedKey, JSON.stringify(value));
+  }, [prefixedKey, value]);
 
-  return [value, setValue]
+  return [value, setValue];
 }
-export default useLocalStorage()

@@ -1,31 +1,28 @@
 /* eslint-disable no-unused-vars */
-import { React, useState } from 'react'
+import {
+  React,
+  useState,
+  useEffect,
+  useRef
+} from 'react'
 import { Form, Button } from 'react-bootstrap'
-import { useDispatch } from 'react-redux'
-import { nanoid } from 'nanoid'
+import { useDispatch, useSelector } from 'react-redux'
+import { Navigate } from 'react-router-dom'
+import useLocalStorage from '../hooks/useLocalStorage'
+import { useSocket } from '../contexts/SocketProvider'
 import danny from '../pics/danny.jpg'
 
-const userdata = [
-  {
-    id: 1,
-    email: 'ne@ya.ru',
-    login: 'nexman',
-    password: 'qwerty'
-  },
-  {
-    id: 2,
-    email: 'ne2@ya.ru',
-    login: 'nexman2',
-    password: 'qwerty'
-  }
-]
+const SERVER_URL = 'http://localhost:5000'
 
 export default function Login() {
+  const dispatch = useDispatch();
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('');
-  const [errors, setErrors] = useState('');
 
-  const dispatch = useDispatch();
+  const [storageEmail, setStorageEmail] = useLocalStorage('email');
+  const [storagePassword, setStoragePassword] = useLocalStorage('password');
+
+  const [tryLogin, setTryLogin] = useState(false);
 
   const handleChangeEmail = (e) => {
     setEmail(e.target.value)
@@ -34,32 +31,35 @@ export default function Login() {
     setPassword(e.target.value)
   }
 
+  const socket = useSocket();
+
   const handleSubmit = (e) => {
     e.preventDefault()
-    const checkResult = checkUsers(email, password);
-    if (!checkResult.error) {
-      dispatch({
-        type: 'CHANGE_USER',
-        user: {
-          ...checkResult,
-          avatar: danny
-        }
-      })
-    } else setErrors(checkResult.error)
+    setStorageEmail(email)
+    setStoragePassword(password)
+    setTryLogin(true);
+    emitData();
   }
 
-  const checkUsers = (temail, tpassword) => {
-    const t = userdata.find((elem) => elem.email === temail && elem.password === tpassword);
-    const tindex = userdata.findIndex(
-      (elem) => elem.email === temail && elem.password === tpassword
-    );
-    if (t) {
-      const tcookie = nanoid(8);
-      t.cookie = tcookie;
-      userdata[tindex].cookie = tcookie; // надо сделать массив иммутабельным
-    }
-    return t || { error: 'no users found with such email or password' }
+  const emitData = () => {
+    socket.emit('user:login', { userId: storageEmail, password: storagePassword })
   }
+
+  useEffect(() => {
+    if (tryLogin) {
+      socket.on('userData', (data) => {
+        console.log(data)
+        dispatch({
+          type: 'CHANGE_USER',
+          user: {
+            ...data,
+            avatar: danny
+          }
+        })
+        setTryLogin(false)
+      });
+    }
+  });
 
   return (
     <Form
@@ -76,18 +76,15 @@ export default function Login() {
       <Form.Label>Enter your login information</Form.Label>
       <Form.Group className="mb-3">
         <Form.Label>Email:</Form.Label>
-        <Form.Control type="email" placeholder="Enter your email" value={email} onChange={handleChangeEmail} />
+        <Form.Control type="email" placeholder="Enter your email" value={email} onChange={handleChangeEmail} required />
       </Form.Group>
       <Form.Group className="mb-3">
-        <Form.Label>Email:</Form.Label>
-        <Form.Control type="password" placeholder="Enter your password" value={password} onChange={handleChangePassword} />
+        <Form.Label>Password:</Form.Label>
+        <Form.Control type="password" placeholder="Enter your password" value={password} onChange={handleChangePassword} required />
       </Form.Group>
       <Button variant="success" type="submit">
         Chat
       </Button>
-      <Form.Label className="text-danger">
-        {errors}
-      </Form.Label>
     </Form>
   )
 }

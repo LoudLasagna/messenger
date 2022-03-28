@@ -1,28 +1,37 @@
-const users = [
-  {
-    id: 1,
-    avatar: "gorg",
+const users = {
+  'ne@ya.ru': {
+    avatar: 'gorg',
     login: 'nexman',
-    password: 'qwerty'
+    email: 'ne@ya.ru',
+    password: 'qwerty',
+    online: false
   },
-  {
-    id: 2,
-    avatar: "danny",
+  'ne2ya.eu': {
+    avatar: 'danny',
     login: 'nexman2',
-    password: 'qwerty'
+    email: 'ne2ya.eu',
+    password: 'qwerty',
+    online: false
   }
-]
+}
   
-export const registerGetUsers = (io, socket) => {
+export default (io, socket) => {
   const getUsers = () => {
-    io.in(socket.roomId).emit('users', users)
+    io.in(socket.sessionId).emit('users', users)
   }
 
-  const addUser = ({ username, userId }) => {
+  const registerUser = ({ login, userId, encodedPassword }) => {
     if (!users[userId]) {
-      users[userId] = { username, online: true }
+      users[userId] = { avatar: 'placeholder', login, email: userId, password: encodedPassword, online: true }
     } else {
+      users[userId].online = true // нужно выдавать ошибку
+    }
+  }
+
+  const loginUser = ({ userId, password }) => {
+    if (users[userId] && users[userId].password === password) {
       users[userId].online = true
+      io.in(socket.sessionId).emit('userData', users[userId]);
     }
 
     getUsers()
@@ -34,12 +43,6 @@ export const registerGetUsers = (io, socket) => {
   }
   
   socket.on('user:get', getUsers)
-  socket.on('user:add', addUser)
+  socket.on('user:login', loginUser)
   socket.on('user:leave', removeUser)
-}
-
-export const registerTryLogin = (io, socket) => {
-  const registerTryLogin = (userId, userObj) => {
-    io.in(socket.roomId).emit('userdata', userObj)
-  }
 }
