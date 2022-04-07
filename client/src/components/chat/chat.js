@@ -1,7 +1,3 @@
-/* eslint-disable max-len */
-/* eslint-disable no-unused-vars */
-/* eslint-disable spaced-comment */
-/* eslint-disable no-multiple-empty-lines */
 /* eslint-disable react/no-array-index-key */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
@@ -9,21 +5,23 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable prefer-const */
 import {
-  useState, React, useEffect, useRef
+  useState,
+  React,
+  useEffect,
+  useRef,
+  Fragment
 } from 'react';
-import { Form, Button, Modal } from 'react-bootstrap';
+import { Modal } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
 
-import { Picker } from 'emoji-mart';
-import { FiSend } from 'react-icons/fi';
-import { GrEmoji } from 'react-icons/gr';
-
-import { useSocket } from '../contexts/SocketProvider';
-import Message from './message';
-import gorg from '../pics/gorg.jpg';
-import danny from '../pics/danny.jpg';
-import cross from '../pics/cross.png';
+import { useSocket } from '../../contexts/SocketProvider';
+import UseChat from '../hooks/useChat'
+import MessageInput from './messageInput'
+import FilePreview from './filePreview';
+import Message from '../message';
+import gorg from '../../pics/gorg.jpg';
+import danny from '../../pics/danny.jpg';
+import cross from '../../pics/cross.png';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'emoji-mart/css/emoji-mart.css';
 
@@ -50,12 +48,13 @@ function getWindowDimensions() {
   };
 }
 
-function useChat(chatId) {
+// eslint-disable-next-line no-unused-vars
+function luseChat(chatId) {
   const [lusers, setUsers] = useState([])
   const [messages, setMessages] = useState([])
 
-  const [username] = useSelector((store) => store.currentUser.login || '-1')
-  const [userEmail] = useSelector((store) => store.currentUser.email || '-1')
+  const username = useSelector((store) => store.currentUser.login)
+  const userEmail = useSelector((store) => store.currentUser.email)
 
   const socket = useSocket();
 
@@ -76,11 +75,6 @@ function useChat(chatId) {
   }, [chatId, userEmail, username])
 
   const sendMessage = ({ text }) => {
-    console.log(
-      chatId,
-      username,
-      text
-    );
     socket.emit('message:add', {
       chatId,
       senderName: username,
@@ -103,41 +97,16 @@ function useChat(chatId) {
 export default function Chat() {
   const activeChat = useSelector((store) => store.activeChat);
   const currentUserId = useSelector((store) => store.currentUser.id);
+  const file = useSelector((store) => store.file);
 
-  const chatHook = useChat(activeChat.id);
-  // console.log(chatHook);
+  const chatHook = UseChat(activeChat.id);
 
   const messagesEnd = useRef(null);
   const [showChatDetails, setShowChatDetails] = useState(false);
   const handleClose = () => setShowChatDetails(false);
   const handleShow = () => setShowChatDetails(true);
 
-  const [userInput, ChangeInput] = useState('');
-
-  const [showEmoji, setShowEmoji] = useState(false);
-  const handleEmojiShow = () => {
-    setShowEmoji((v) => !v)
-  }
-  const handleEmojiSelect = (e) => {
-    // eslint-disable-next-line no-shadow
-    ChangeInput(userInput + e.native)
-  }
-
   const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions());
-  const HandleInput = (event) => {
-    event.preventDefault();
-    event.stopPropagation();
-    ChangeInput(event.target.value);
-  }
-
-  const HandleSubmit = (event) => {
-    ChangeInput('');
-    chatHook.sendMessage({ text: userInput })
-
-    scrollToBottom();
-    event.preventDefault();
-    event.stopPropagation();
-  }
 
   const scrollToBottom = () => {
     messagesEnd.current?.scrollIntoView({ behavior: 'smooth' });
@@ -155,8 +124,12 @@ export default function Chat() {
     scrollToBottom()
   }, [messagesEnd.current])
 
+  // {file && <FilePreview width={windowDimensions.width} />}
+  const filteredMessages = chatHook.messages.filter((elem) => elem.chatId === activeChat.id)
+
   return (
     <div className="Chat-elements-container">
+      {chatHook.mountingTag}
       <div className="Chat-info-container">
         {activeChat.id
         && (
@@ -170,38 +143,31 @@ export default function Chat() {
         {
           // eslint-disable-next-line no-nested-ternary
           activeChat.id
-            ? chatHook.messages.filter((elem) => elem.chatId === activeChat.id).length > 0
-              ? (chatHook.messages.map((message, index) => (
-                <Message
-                  ref={index === chatHook.messages.length - 1 ? messagesEnd : null}
-                  key={index}
-                  messageData={message}
-                  currentUser={currentUserId}
-                  senderData={users.find((elem) => elem.email === message.email)}
-                />
-              )))
-              : (
+            ? filteredMessages.length > 0
+              ? (filteredMessages.map((message, index) => {
+                const lastMessage = filteredMessages.length - 1 === index
+                return (
+                  <Fragment key={index}>
+                    <Message
+                      messageData={message}
+                      currentUser={currentUserId}
+                      senderData={users.find((elem) => elem.email === message.email)}
+                    />
+                    {lastMessage && <div ref={messagesEnd} />}
+                  </Fragment>
+                )
+              })) : (
                 <div className="SampleText"> You can be the first one to write in this chat! Dont miss this opportunity</div>
               )
             : <div className="SampleText"> Select a chat to start a conversation! </div>
         }
+        {file && <FilePreview />}
       </div>
       {
         // eslint-disable-next-line no-nested-ternary
         activeChat.id && activeChat.id !== '-1'
-          && (
-          <Form className="Chat-input-container" onSubmit={HandleSubmit}>
-            <Button variant="primary" type="button" onClick={handleEmojiShow}>
-              <GrEmoji />
-            </Button>
-            <Form.Control type="text" className="Chat-input" value={userInput} onChange={HandleInput} />
-            <Button variant="success" type="submit">
-              <FiSend />
-            </Button>
-          </Form>
-          )
+          && (<MessageInput />)
       }
-      {showEmoji && <Picker set="apple" theme="dark" style={{ position: 'absolute', bottom: '6vh', left: '340px' }} onSelect={handleEmojiSelect} emojiSize={20} />}
       <Modal show={showChatDetails} onHide={handleClose} centered>
         <Modal.Header closeButton className="info-container">
           <Modal.Title>{activeChat.name}</Modal.Title>
@@ -212,30 +178,3 @@ export default function Chat() {
     </div>
   );
 }
-
-/*
-    let t = Tmessages.slice();
-    t.push({
-      chatId: activeChat.id,
-      userId: currentUserId,
-      text: userInput,
-      datetime: new Date()
-    })
-    console.log(Tmessages);
-    CM(t);
-  const [Tmessages, CM] = useState(messages); /////////////////
-? Tmessages.filter((elem) => elem.chatId === activeChat.id).length > 0
-    ? (Tmessages.filter((elem) => elem.chatId === activeChat.id).map((message, index) => (
-      <Message
-        key={index}
-        messageData={message}
-        currentUser={currentUserId}
-        senderData={users.find((elem) => elem.id === message.userId)}
-      />
-    )))
-    : (
-      <div className="SampleText"> You can be the first one to write in this chat! Dont miss this opportunity</div>
-    )
-  : <div className="SampleText"> Select a chat to start a conversation! </div>
-*/
-

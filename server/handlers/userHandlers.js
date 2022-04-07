@@ -4,7 +4,8 @@ const users = {
     login: 'nexman',
     email: 'ne@ya.ru',
     password: 'qwerty',
-    online: false
+    online: false,
+    chats: []
   },
   'ne2ya.eu': {
     avatar: 'danny',
@@ -32,6 +33,8 @@ export default (io, socket) => {
     if (users[userId] && users[userId].password === password) {
       users[userId].online = true
       io.in(socket.sessionId).emit('userData', users[userId]);
+    } else {
+      io.in(socket.sessionId).emit('error', 'no users with this login information')
     }
 
     getUsers()

@@ -12,23 +12,25 @@ import useLocalStorage from '../hooks/useLocalStorage'
 import { useSocket } from '../contexts/SocketProvider'
 import danny from '../pics/danny.jpg'
 
-const SERVER_URL = 'http://localhost:5000'
-
 export default function Login() {
   const dispatch = useDispatch();
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('');
+  const [errors, setErrors] = useState('');
 
   const [storageEmail, setStorageEmail] = useLocalStorage('email');
   const [storagePassword, setStoragePassword] = useLocalStorage('password');
+
+  const [email, setEmail] = useState(storageEmail || '')
+  const [password, setPassword] = useState(storagePassword || '');
 
   const [tryLogin, setTryLogin] = useState(false);
 
   const handleChangeEmail = (e) => {
     setEmail(e.target.value)
+    console.log(email)
   }
   const handleChangePassword = (e) => {
     setPassword(e.target.value)
+    console.log(password)
   }
 
   const socket = useSocket();
@@ -38,28 +40,23 @@ export default function Login() {
     setStorageEmail(email)
     setStoragePassword(password)
     setTryLogin(true);
-    emitData();
+    socket.emit('user:login', { userId: email, password })
   }
 
-  const emitData = () => {
-    socket.emit('user:login', { userId: storageEmail, password: storagePassword })
+  if (tryLogin) {
+    socket.on('userData', (data) => {
+      setTryLogin(false)
+      dispatch({
+        type: 'CHANGE_USER',
+        user: {
+          ...data,
+          avatar: danny
+        }
+      })
+    });
+    socket.on('error', (data) => setErrors(data))
+    console.log(errors)
   }
-
-  useEffect(() => {
-    if (tryLogin) {
-      socket.on('userData', (data) => {
-        console.log(data)
-        dispatch({
-          type: 'CHANGE_USER',
-          user: {
-            ...data,
-            avatar: danny
-          }
-        })
-        setTryLogin(false)
-      });
-    }
-  });
 
   return (
     <Form
@@ -82,9 +79,14 @@ export default function Login() {
         <Form.Label>Password:</Form.Label>
         <Form.Control type="password" placeholder="Enter your password" value={password} onChange={handleChangePassword} required />
       </Form.Group>
-      <Button variant="success" type="submit">
-        Chat
-      </Button>
+      <Form.Group className="mb-3">
+        <Button variant="success" type="submit">
+          Chat
+        </Button>
+      </Form.Group>
+      <Form.Text className="text-danger">
+        {errors}
+      </Form.Text>
     </Form>
   )
 }

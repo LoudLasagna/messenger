@@ -16,7 +16,6 @@ import useLocalStorage from './hooks/useLocalStorage';
 function App() {
   const userData = useSelector((state) => state.currentUser)
   const [storageEmail, setstorageEmail] = useLocalStorage('email');
-
   return (
     <SocketProvider id={storageEmail}>
       <div className="App">

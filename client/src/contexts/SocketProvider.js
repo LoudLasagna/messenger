@@ -1,9 +1,9 @@
 /* eslint-disable react/prop-types */
 import React, { useContext, useEffect, useState } from 'react'
 import io from 'socket.io-client'
+import { SERVER_URL } from '../components/constants'
 
 const SocketContext = React.createContext()
-const SERVER_URL = 'http://localhost:5000'
 
 export function useSocket() {
   return useContext(SocketContext)

@@ -8,18 +8,21 @@
 /* eslint-disable prefer-const */
 import {
   React,
-  useState
+  useState,
+  useEffect
 } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Modal } from 'react-bootstrap';
+import { useSocket } from '../contexts/SocketProvider';
 import UserProfile from './userprofile';
 import cross from '../pics/cross.png';
-import Chat from './chat';
+import Chat from './chat/chat';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
-let chats = [
+// eslint-disable-next-line no-unused-vars
+let lchats = [
   {
     id: '1-1',
     name: 'arggarh',
@@ -50,6 +53,36 @@ let chats = [
   }
 ]
 
+function useChats(userEmail) {
+  const [chats, setChats] = useState([])
+
+  const socket = useSocket();
+
+  useEffect(() => {
+    socket.on('chats', (chts) => {
+      setChats(chts)
+    })
+
+    socket.emit('chats:get', { userEmail })
+  }, [userEmail])
+
+  const createChat = ({ name, members }) => {
+    socket.emit('chats:add', {
+      name,
+      members
+    })
+  }
+
+  const removeMessage = (id) => {
+    socket.emit('message:remove', id)
+  }
+
+  return {
+    chats,
+    createChat,
+    removeMessage
+  }
+}
 
 function Home() {
   const dispatch = useDispatch();
@@ -58,6 +91,9 @@ function Home() {
 
   const [showUserProfile, setShowUserProfile] = useState(false);
 
+  const chatHook = useChats(userData.email)
+  const { chats } = chatHook;
+  console.log(chats);
   const ChatOnClick = (chatId) => {
     const clickedChat = chats.find((elem) => elem.id === chatId)
     dispatch({
