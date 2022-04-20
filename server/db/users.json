@@ -1,16 +1,40 @@
 {
-    "users": [
-        {
-        "id": "1",
-        "avatar": "gorg",
-        "login": "nexman",
-        "password": "qwerty"
-        },
-        {
-        "id": "2",
-        "avatar": "danny",
-        "login": "nexman2",
-        "password": "qwerty"
-        }
-    ]
+  "users":[
+    {
+      "id": "123129",
+      "avatar": "/files/avatars/danny.jpg",
+      "login": "nexman",
+      "email": "ne@ya.ru",
+      "password": "qwerty",
+      "online": false,
+      "chats": [
+        "1-1",
+        "1-2",
+        "1-3"
+      ]
+    },
+    {
+      "id": "12310",
+      "avatar": "/files/avatars/gorg.jpg",
+      "login": "nexman2",
+      "email": "ne2@ya.ru",
+      "password": "qwerty",
+      "online": false,
+      "chats": [
+        "1-1",
+        "1-2"
+      ]
+    },
+    {
+      "id": "1231239",
+      "avatar": "/files/avatars/smiley.jpg",
+      "login": "nexman3",
+      "email": "ne3@ya.ru",
+      "password": "qwerty",
+      "online": false,
+      "chats": [
+        "1-2"
+      ]
+    }
+  ]
 }

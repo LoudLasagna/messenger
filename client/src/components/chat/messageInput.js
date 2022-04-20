@@ -13,7 +13,7 @@ import {
   useEffect
 } from 'react';
 import { Form, Button } from 'react-bootstrap';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import { Picker } from 'emoji-mart';
 import { FiSend } from 'react-icons/fi';
@@ -28,21 +28,31 @@ import 'emoji-mart/css/emoji-mart.css';
 
 export default function MessageInput() {
   const activeChat = useSelector((store) => store.activeChat);
+  const currentUser = useSelector((store) => store.currentUser)
 
   const [userInput, ChangeInput] = useState('');
   const [showEmoji, setShowEmoji] = useState(false);
   const [submitDisabled, setSubmitDisabled] = useState(true)
 
+  const dispatch = useDispatch();
   const file = useSelector((state) => state.file);
 
-  const chatHook = UseChat(activeChat.id)
+  let chatHook = UseChat(activeChat.id)
 
   const handleEmojiShow = () => {
     setShowEmoji((v) => !v)
   }
+
   const handleEmojiSelect = (e) => {
     // eslint-disable-next-line no-shadow
     ChangeInput(userInput + e.native)
+  }
+
+  function unsetFile() {
+    dispatch({
+      type: 'CHANGE_FILE',
+      file: null
+    })
   }
 
   const HandleInput = (event) => {
@@ -56,7 +66,7 @@ export default function MessageInput() {
     event.stopPropagation();
     if (submitDisabled) return
 
-    const message = {}
+    const message = { userId: currentUser.id, userName: currentUser.login, avatar: currentUser.avatar }
 
     if (file) {
       try {
@@ -68,11 +78,12 @@ export default function MessageInput() {
         console.error(e)
       }
       chatHook.sendMessage(message)
+      unsetFile()
     }
 
     message.messageType = 'text'
     message.content = userInput
-    chatHook.sendMessage(message)
+    if (userInput.length > 0) chatHook.sendMessage(message)
 
     ChangeInput('');
   }
@@ -87,9 +98,9 @@ export default function MessageInput() {
         <Button variant="primary" type="button" onClick={handleEmojiShow}>
           <GrEmoji />
         </Button>
-        <Form.Control disabled={setSubmitDisabled} type="text" className="Chat-input" value={userInput} onChange={HandleInput} />
+        <Form.Control type="text" className="Chat-input" value={userInput} onChange={HandleInput} />
         <FileInput />
-        <Button variant="success" type="submit">
+        <Button variant="success" type="submit" disabled={submitDisabled}>
           <FiSend />
         </Button>
       </Form>

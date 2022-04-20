@@ -1,0 +1,28 @@
+{
+  "chats" :[
+    {
+      "id": "1",
+      "name": "arggarh",
+      "members": [
+          "ne@ya.ru",
+          "ne2@ya.ru"
+      ]
+    },
+    {
+      "id": "2",
+      "name": "тест2",
+      "members": [
+          "ne@ya.ru",
+          "ne2@ya.ru",
+          "ne3@ya.ru"
+      ]
+    },
+    {
+      "id": "3",
+      "name": "тест3",
+      "members": [
+          "ne@ya.ru"
+      ]
+    }
+  ]
+}

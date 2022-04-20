@@ -13,8 +13,10 @@ import {
 } from 'react';
 import { Modal } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
+import { io } from 'socket.io-client';
+import { SERVER_URL } from '../constants';
 
-import { useSocket } from '../../contexts/SocketProvider';
+// eslint-disable-next-line no-unused-vars
 import UseChat from '../hooks/useChat'
 import MessageInput from './messageInput'
 import FilePreview from './filePreview';
@@ -56,8 +58,10 @@ function luseChat(chatId) {
   const username = useSelector((store) => store.currentUser.login)
   const userEmail = useSelector((store) => store.currentUser.email)
 
-  const socket = useSocket();
-
+  const socket = io(
+    SERVER_URL,
+    { query: { chatId } }
+  )
   useEffect(() => {
     socket.on('users', (usrs) => {
       setUsers(usrs)
@@ -125,11 +129,9 @@ export default function Chat() {
   }, [messagesEnd.current])
 
   // {file && <FilePreview width={windowDimensions.width} />}
-  const filteredMessages = chatHook.messages.filter((elem) => elem.chatId === activeChat.id)
 
   return (
     <div className="Chat-elements-container">
-      {chatHook.mountingTag}
       <div className="Chat-info-container">
         {activeChat.id
         && (
@@ -143,9 +145,9 @@ export default function Chat() {
         {
           // eslint-disable-next-line no-nested-ternary
           activeChat.id
-            ? filteredMessages.length > 0
-              ? (filteredMessages.map((message, index) => {
-                const lastMessage = filteredMessages.length - 1 === index
+            ? chatHook.messages.length > 0
+              ? (chatHook.messages.map((message, index) => {
+                const lastMessage = chatHook.messages.length - 1 === index
                 return (
                   <Fragment key={index}>
                     <Message
@@ -166,7 +168,7 @@ export default function Chat() {
       {
         // eslint-disable-next-line no-nested-ternary
         activeChat.id && activeChat.id !== '-1'
-          && (<MessageInput />)
+          && (<MessageInput sendMessage={chatHook.sendMessage} />)
       }
       <Modal show={showChatDetails} onHide={handleClose} centered>
         <Modal.Header closeButton className="info-container">

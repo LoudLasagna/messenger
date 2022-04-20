@@ -122,9 +122,8 @@ img:before {
 
 
 .Message {
-  min-height:30px;
   width: fit-content;
-  min-height:fit-content;
+  height:fit-content;
   max-width: 80%;
   margin: 10px 10px 10px 100px;
   padding: 0 10px 0 0; 
@@ -132,6 +131,10 @@ img:before {
   background-color: #58606e;
   display: flex;
   flex-flow: row nowrap;
+}
+
+.Message.media {
+  max-height: 700px;
 }
 
 .Message.UM {

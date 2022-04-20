@@ -1,4 +1,5 @@
 /* eslint-disable react/prop-types */
+/*
 import React, { useContext, useEffect, useState } from 'react'
 import io from 'socket.io-client'
 import { SERVER_URL } from '../components/constants'
@@ -26,3 +27,4 @@ export function SocketProvider({ id, children }) {
     </SocketContext.Provider>
   )
 }
+*/

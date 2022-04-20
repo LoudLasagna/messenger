@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 /* eslint-disable no-unused-vars */
 import {
   React,
@@ -5,12 +6,14 @@ import {
   useEffect,
   useRef
 } from 'react'
+import axios from 'axios'
 import { Form, Button } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { Navigate } from 'react-router-dom'
 import useLocalStorage from '../hooks/useLocalStorage'
 import { useSocket } from '../contexts/SocketProvider'
 import danny from '../pics/danny.jpg'
+import { SERVER_URL } from './constants'
 
 export default function Login() {
   const dispatch = useDispatch();
@@ -18,11 +21,11 @@ export default function Login() {
 
   const [storageEmail, setStorageEmail] = useLocalStorage('email');
   const [storagePassword, setStoragePassword] = useLocalStorage('password');
-
+  console.log(storageEmail, storagePassword)
   const [email, setEmail] = useState(storageEmail || '')
   const [password, setPassword] = useState(storagePassword || '');
 
-  const [tryLogin, setTryLogin] = useState(false);
+  // const [tryLogin, setTryLogin] = useState(false);
 
   const handleChangeEmail = (e) => {
     setEmail(e.target.value)
@@ -33,16 +36,32 @@ export default function Login() {
     console.log(password)
   }
 
-  const socket = useSocket();
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    setStorageEmail(email)
-    setStoragePassword(password)
-    setTryLogin(true);
-    socket.emit('user:login', { userId: email, password })
+    // setTryLogin(true);
+
+    tryLogin()
+    // socket.emit('user:login', { userId: email, password })
   }
 
+  const tryLogin = async () => {
+    axios.post(`${SERVER_URL}/login`, {
+      email,
+      password
+    })
+      .then((response) => {
+        if (response.data.auth) {
+          setStorageEmail(email)
+          setStoragePassword(password)
+          dispatch({
+            type: 'CHANGE_USER',
+            user: { ...response.data.user }
+          })
+        } else setErrors('Неверный email или пароль')
+      })
+  }
+
+  /*
   if (tryLogin) {
     socket.on('userData', (data) => {
       setTryLogin(false)
@@ -57,6 +76,9 @@ export default function Login() {
     socket.on('error', (data) => setErrors(data))
     console.log(errors)
   }
+  */
+
+  if (storageEmail && storagePassword) tryLogin();
 
   return (
     <Form

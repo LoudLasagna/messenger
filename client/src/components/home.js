@@ -22,37 +22,34 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 // eslint-disable-next-line no-unused-vars
-let lchats = [
+const lchats = [
   {
-    id: '1-1',
+    id: '1',
     name: 'arggarh',
-    avatar: cross,
     members: [
-      1,
-      2
+      'ne@ya.ru',
+      'ne2@ya.ru'
     ]
   },
   {
-    id: '1-2',
+    id: '2',
     name: 'тест2',
-    avatar: cross,
     members: [
-      1,
-      2,
-      3
+      'ne@ya.ru',
+      'ne2@ya.ru',
+      'ne3@ya.ru'
     ]
   },
   {
-    id: '1-3',
+    id: '3',
     name: 'тест3',
-    avatar: cross,
     members: [
-      1,
-      2
+      'ne@ya.ru'
     ]
   }
 ]
 
+// eslint-disable-next-line no-unused-vars
 function useChats(userEmail) {
   const [chats, setChats] = useState([])
 
@@ -91,11 +88,11 @@ function Home() {
 
   const [showUserProfile, setShowUserProfile] = useState(false);
 
-  const chatHook = useChats(userData.email)
-  const { chats } = chatHook;
-  console.log(chats);
+  //const chatHook = useChats(userData.email)
+  //const { chats } = chatHook;
+  //console.log(chats);
   const ChatOnClick = (chatId) => {
-    const clickedChat = chats.find((elem) => elem.id === chatId)
+    const clickedChat = lchats.find((elem) => elem.id === chatId)
     dispatch({
       type: 'CHANGE_CHAT',
       chat: clickedChat
@@ -115,7 +112,7 @@ function Home() {
           </Link>
         </div>
         { ////// fetch chats
-          chats.map((chat) => (
+          lchats.map((chat) => (
             <div key={chat.id} className="Chat" onClick={() => ChatOnClick(chat.id)}>
               <img src={cross} className="chat-avatar" alt="chat-av" />
               {chat.name}

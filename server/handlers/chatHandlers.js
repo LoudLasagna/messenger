@@ -18,10 +18,10 @@ const users = {
       '1-3'
     ]
   },
-  'ne2ya.eu': {
+  'ne2@ya.ru': {
     avatar: 'danny',
     login: 'nexman2',
-    email: 'ne2ya.eu',
+    email: 'ne2@ya.ru',
     password: 'qwerty',
     online: false,
     chats: [
@@ -29,10 +29,10 @@ const users = {
       '1-2'
     ]
   },
-  'ne3ya.eu': {
+  'ne3@ya.ru': {
     avatar: 'danny',
     login: 'nexman3',
-    email: 'ne3ya.eu',
+    email: 'ne3@ya.ru',
     password: 'qwerty',
     online: false,
     chats: [
@@ -72,7 +72,7 @@ export default (io, socket) => {
     uchats.forEach((element) => {
       lchats.push({ id: element, ...chats[element] })
     });
-    io.in(socket.sessionId).emit('chats', lchats)
+    io.in(socket.userId).emit('chats', lchats)
   }
 
   const createChat = ({ name, members }) => {
@@ -81,14 +81,14 @@ export default (io, socket) => {
       name,
       members
     }
-    getChats({ userEmail: socket.sessionId })
+    getChats({ userEmail: socket.userId })
   }
 
 
   const removeChat = ({ chatId }) => {
     chats[chatId] = {}
 
-    getChats({ userEmail: socket.sessionId })
+    getChats({ userEmail: socket.userId })
   }
 
   socket.on('chats:get', getChats)

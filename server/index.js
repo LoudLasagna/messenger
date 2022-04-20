@@ -4,6 +4,9 @@ import path from 'path'
 import { Server } from 'socket.io'
 import express from 'express'
 
+import bodyParser from 'body-parser'
+import fs from "fs"
+
 import { getFilePath } from './utils/file.js'
 import onError from './utils/onError.js'
 import upload from './utils/upload.js'
@@ -15,6 +18,7 @@ import registerChatHandler from './handlers/chatHandlers.js'
 import { fileURLToPath } from 'url'
 import { dirname } from 'path'
 
+const jsonParser = bodyParser.json()
 const app = express()
 
 const PORT = process.env.PORT || 5000;
@@ -47,6 +51,25 @@ app.use('/files', (req, res) => {
   res.status(200).sendFile(filePath)
 })
 
+app.post('/login', jsonParser, (req, res) => {
+  const data = fs.readFileSync('./db/users.json', 'utf8');
+  const users = JSON.parse(data).users;
+
+  let user = null;
+
+  const t = users.find((elem) => elem.email === req.body.email && elem.password === req.body.password)
+  if (t) {
+    user = {
+      id: t.id,
+      avatar: t.avatar,
+      login: t.login,
+      email: t.email
+    }
+  }
+  if (user) res.send({ auth: true, user })
+  else res.send({ auth: false, errorMessage: 'неверный телефон или пароль' })
+})
+
 app.use(onError)
 
 const httpServer = createServer(app)
@@ -62,11 +85,11 @@ const log = console.log
 
 const onConnection = (socket) => {
   log('User connected')
-    
-  const { sessionId } = socket.handshake.query
-  log('Sid: ' + sessionId)
-  socket.sessionId = sessionId
-  socket.join(sessionId)
+
+  const { chatId } = socket.handshake.query
+  log('Sid: ' + chatId)
+  socket.chatId = chatId
+  socket.join(chatId)
 
   registerMessageHandler(io, socket)
   registerUsersHandler(io, socket)
@@ -76,7 +99,7 @@ const onConnection = (socket) => {
 
   socket.on('disconnect', () => {
     log('User disconnected')
-      socket.leave(sessionId)
+      socket.leave(chatId)
   })
 }
 

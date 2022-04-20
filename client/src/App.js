@@ -9,7 +9,6 @@ import { useSelector } from 'react-redux';
 import { Navigate } from 'react-router-dom';
 import Home from './components/home';
 import Login from './components/login';
-import { SocketProvider } from './contexts/SocketProvider';
 import useBeforeUnload from './hooks/useBeforeUnload';
 import useLocalStorage from './hooks/useLocalStorage';
 
@@ -17,12 +16,10 @@ function App() {
   const userData = useSelector((state) => state.currentUser)
   const [storageEmail, setstorageEmail] = useLocalStorage('email');
   return (
-    <SocketProvider id={storageEmail}>
-      <div className="App">
-        { userData.login ? <Home /> : <Login />}
-      </div>
-    </SocketProvider>
+    <div className="App">
+      { userData.login ? <Home /> : <Login />}
+    </div>
   )
 }
-
+// { userData.login ? <Home /> : <Login />}
 export default App;

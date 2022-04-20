@@ -17,7 +17,6 @@ const upload = async ({ file, chatId }) => {
       }
     })
 
-    console.log(response)
     if (!response.ok) throw response
 
     const pathToFile = await response.json()

@@ -7,12 +7,13 @@ const users = {
     online: false,
     chats: []
   },
-  'ne2ya.eu': {
+  'ne2@ya.ru': {
     avatar: 'danny',
     login: 'nexman2',
-    email: 'ne2ya.eu',
+    email: 'ne2@ya.ru',
     password: 'qwerty',
-    online: false
+    online: false,
+    chats: []
   }
 }
   

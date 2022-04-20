@@ -1,20 +1,22 @@
 import {
   useState,
-  useEffect,
-  React
+  useEffect
 } from 'react';
 import { useSelector } from 'react-redux';
+import { io } from 'socket.io-client';
 
-import { useSocket } from '../../contexts/SocketProvider';
+import { SERVER_URL } from '../constants';
 
 export default function UseChat(chatId) {
   const [lusers, setUsers] = useState([])
   const [messages, setMessages] = useState([])
 
-  const username = useSelector((store) => store.currentUser.login)
   const userEmail = useSelector((store) => store.currentUser.email)
 
-  const socket = useSocket();
+  const socket = io(
+    SERVER_URL,
+    { query: { chatId } }
+  )
 
   useEffect(() => {
     socket.on('users', (usrs) => {
@@ -30,12 +32,13 @@ export default function UseChat(chatId) {
       ))
       setMessages(newMessages)
     })
-  }, [chatId, userEmail, username])
+
+    return () => socket.disconnect()
+  }, [chatId])
 
   const sendMessage = (messageData) => {
     socket.emit('message:add', {
       chatId,
-      senderName: username,
       ...messageData
     })
   }
@@ -44,12 +47,10 @@ export default function UseChat(chatId) {
     socket.emit('message:remove', id)
   }
 
-  const mountingTag = <></>
   return {
     lusers,
     messages,
     sendMessage,
-    removeMessage,
-    mountingTag
+    removeMessage
   }
 }

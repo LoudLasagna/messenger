@@ -12,16 +12,19 @@ import {
   React
 } from 'react';
 import TimeAgo from 'react-timeago'
+import { SERVER_URL } from './constants'
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 export default function Message(props) {
   const {
-    userId, content, createdAt, messageType
+    userId, userName, avatar, content, createdAt, messageType
   } = props.messageData;
-  const { currentUser, senderData } = props;
+  const { currentUser } = props;
   const contentStyle = { maxWidth: '100%', borderRadius: 10 }
-  const pathToFile = `http://localhost:5000/files${content}`
+  const pathToFile = `${SERVER_URL}/files${content}`
+
+  let classes = 'Message'
 
   let element
   switch (messageType) {
@@ -29,24 +32,29 @@ export default function Message(props) {
       element = content
       break
     case 'image':
+      classes += ' media'
       element = <img src={pathToFile} alt="" style={contentStyle} />
       break
     case 'audio':
+      classes += ' media'
       element = <audio src={pathToFile} controls />
       break
     case 'video':
+      classes += ' media'
       element = <video src={pathToFile} controls style={contentStyle} />
       break
     default:
       return null
   }
 
+  if (userId === currentUser) classes += ' UM'
+
   return (
-    <div className={userId === currentUser ? 'Message UM' : 'Message'}>
-      <img className="avatar" alt="a" src={senderData.avatar} />
+    <div className={classes}>
+      <img className="avatar" alt="a" src={avatar} />
       <div className="Message-text-container">
         <div className="Message-username">
-          {senderData.login}
+          {userName}
           {createdAt && <TimeAgo className="Message-datetime" date={createdAt} />}
         </div>
         <div className="Message-text">
