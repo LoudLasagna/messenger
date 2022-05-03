@@ -14,72 +14,12 @@ import {
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Modal } from 'react-bootstrap';
-import { useSocket } from '../contexts/SocketProvider';
+import axios from 'axios';
 import UserProfile from './userprofile';
-import cross from '../pics/cross.png';
 import Chat from './chat/chat';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-
-// eslint-disable-next-line no-unused-vars
-const lchats = [
-  {
-    id: '1',
-    name: 'arggarh',
-    members: [
-      'ne@ya.ru',
-      'ne2@ya.ru'
-    ]
-  },
-  {
-    id: '2',
-    name: 'тест2',
-    members: [
-      'ne@ya.ru',
-      'ne2@ya.ru',
-      'ne3@ya.ru'
-    ]
-  },
-  {
-    id: '3',
-    name: 'тест3',
-    members: [
-      'ne@ya.ru'
-    ]
-  }
-]
-
-// eslint-disable-next-line no-unused-vars
-function useChats(userEmail) {
-  const [chats, setChats] = useState([])
-
-  const socket = useSocket();
-
-  useEffect(() => {
-    socket.on('chats', (chts) => {
-      setChats(chts)
-    })
-
-    socket.emit('chats:get', { userEmail })
-  }, [userEmail])
-
-  const createChat = ({ name, members }) => {
-    socket.emit('chats:add', {
-      name,
-      members
-    })
-  }
-
-  const removeMessage = (id) => {
-    socket.emit('message:remove', id)
-  }
-
-  return {
-    chats,
-    createChat,
-    removeMessage
-  }
-}
+import { SERVER_URL } from './constants';
 
 function Home() {
   const dispatch = useDispatch();
@@ -88,11 +28,18 @@ function Home() {
 
   const [showUserProfile, setShowUserProfile] = useState(false);
 
-  //const chatHook = useChats(userData.email)
-  //const { chats } = chatHook;
-  //console.log(chats);
-  const ChatOnClick = (chatId) => {
-    const clickedChat = lchats.find((elem) => elem.id === chatId)
+  const [chats, setChats] = useState([]);
+
+  const getChats = () => {
+    axios.get(`${SERVER_URL}/get-chats`)
+      .then((response) => {
+        if (response.data.chats) {
+          setChats(response.data.chats)
+        } else console.log('Ошибка получения информации о чатах')
+      })
+  }
+
+  const ChatOnClick = (clickedChat) => {
     dispatch({
       type: 'CHANGE_CHAT',
       chat: clickedChat
@@ -101,6 +48,10 @@ function Home() {
 
   const handleShow = () => setShowUserProfile(true);
   const handleClose = () => setShowUserProfile(false);
+
+  useEffect(() => {
+    getChats()
+  }, [])
 
   return (
     <>
@@ -111,10 +62,10 @@ function Home() {
             {userData.login}
           </Link>
         </div>
-        { ////// fetch chats
-          lchats.map((chat) => (
-            <div key={chat.id} className="Chat" onClick={() => ChatOnClick(chat.id)}>
-              <img src={cross} className="chat-avatar" alt="chat-av" />
+        {
+          chats.map((chat) => (
+            <div key={chat.id} className="Chat" onClick={() => ChatOnClick(chat)}>
+              <img src={chat.avatar} alt="av" className="chat-avatar" />
               {chat.name}
             </div>
           ))

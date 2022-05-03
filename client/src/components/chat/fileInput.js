@@ -7,11 +7,14 @@ import { MdAttachFile } from 'react-icons/md'
 // eslint-disable-next-line react/prop-types
 export default function FileInput() {
   const file = useSelector((store) => store.file);
+  const activeChat = useSelector((store) => store.activeChat);
   const dispatch = useDispatch()
+
   function setFile(selectedFile) {
     dispatch({
       type: 'CHANGE_FILE',
-      file: selectedFile
+      file: selectedFile,
+      fileChatId: activeChat.id
     })
   }
 

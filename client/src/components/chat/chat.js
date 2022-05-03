@@ -13,17 +13,14 @@ import {
 } from 'react';
 import { Modal } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
-import { io } from 'socket.io-client';
-import { SERVER_URL } from '../constants';
 
 // eslint-disable-next-line no-unused-vars
-import UseChat from '../hooks/useChat'
+import UseChat from '../../hooks/useChat'
 import MessageInput from './messageInput'
 import FilePreview from './filePreview';
 import Message from '../message';
 import gorg from '../../pics/gorg.jpg';
 import danny from '../../pics/danny.jpg';
-import cross from '../../pics/cross.png';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'emoji-mart/css/emoji-mart.css';
 
@@ -50,59 +47,11 @@ function getWindowDimensions() {
   };
 }
 
-// eslint-disable-next-line no-unused-vars
-function luseChat(chatId) {
-  const [lusers, setUsers] = useState([])
-  const [messages, setMessages] = useState([])
-
-  const username = useSelector((store) => store.currentUser.login)
-  const userEmail = useSelector((store) => store.currentUser.email)
-
-  const socket = io(
-    SERVER_URL,
-    { query: { chatId } }
-  )
-  useEffect(() => {
-    socket.on('users', (usrs) => {
-      setUsers(usrs)
-    })
-
-    socket.emit('message:get', { chatId })
-
-    socket.on('messages', (msgs) => {
-      const newMessages = msgs.map((msg) => (msg.userId === userEmail
-        ? { ...msg, currentUser: true }
-        : msg
-      ))
-      setMessages(newMessages)
-    })
-  }, [chatId, userEmail, username])
-
-  const sendMessage = ({ text }) => {
-    socket.emit('message:add', {
-      chatId,
-      senderName: username,
-      text
-    })
-  }
-
-  const removeMessage = (id) => {
-    socket.emit('message:remove', id)
-  }
-
-  return {
-    lusers,
-    messages,
-    sendMessage,
-    removeMessage
-  }
-}
-
 export default function Chat() {
   const activeChat = useSelector((store) => store.activeChat);
-  const currentUserId = useSelector((store) => store.currentUser.id);
+  const currentUser = useSelector((store) => store.currentUser);
   const file = useSelector((store) => store.file);
-
+  const fileChatId = useSelector((store) => store.fileChatId);
   const chatHook = UseChat(activeChat.id);
 
   const messagesEnd = useRef(null);
@@ -126,17 +75,15 @@ export default function Chat() {
 
   useEffect(() => {
     scrollToBottom()
-  }, [messagesEnd.current])
-
-  // {file && <FilePreview width={windowDimensions.width} />}
+  }, [messagesEnd.current, activeChat.id])
 
   return (
     <div className="Chat-elements-container">
       <div className="Chat-info-container">
         {activeChat.id
         && (
-        <a onClick={handleShow}>
-          <img className="avatar" src={cross} alt="av" />
+        <a onClick={handleShow} className="Chat-info-link">
+          <img className="avatar" src={activeChat.avatar} alt="av" />
           {activeChat.name}
         </a>
         )}
@@ -152,7 +99,7 @@ export default function Chat() {
                   <Fragment key={index}>
                     <Message
                       messageData={message}
-                      currentUser={currentUserId}
+                      currentUser={currentUser.id}
                       senderData={users.find((elem) => elem.email === message.email)}
                     />
                     {lastMessage && <div ref={messagesEnd} />}
@@ -163,19 +110,18 @@ export default function Chat() {
               )
             : <div className="SampleText"> Select a chat to start a conversation! </div>
         }
-        {file && <FilePreview />}
+        {file && fileChatId === activeChat.id && <FilePreview />}
       </div>
-      {
-        // eslint-disable-next-line no-nested-ternary
-        activeChat.id && activeChat.id !== '-1'
-          && (<MessageInput sendMessage={chatHook.sendMessage} />)
-      }
+      { activeChat.id && activeChat.id !== '-1' && (<MessageInput sendMessage={chatHook.sendMessage} />) }
       <Modal show={showChatDetails} onHide={handleClose} centered>
-        <Modal.Header closeButton className="info-container">
-          <Modal.Title>{activeChat.name}</Modal.Title>
+        <Modal.Header style={{ borderBottom: '1px solid #323842' }} closeButton className="info-container">
+          <img src={activeChat.avatar} style={{ height: 100, width: 100 }} alt="av" className="avatar" />
+          {activeChat.name}
         </Modal.Header>
-        <Modal.Body className="info-container">Woohoo, youre reading this text in a modal!</Modal.Body>
-        <Modal.Footer className="info-container" />
+        <Modal.Body className="info-container" style={{ borderTop: 'none' }}>
+          {activeChat.description}
+        </Modal.Body>
+        <Modal.Footer className="info-container" style={{ borderTop: '1px solid #323842' }} />
       </Modal>
     </div>
   );

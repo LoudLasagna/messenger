@@ -89,12 +89,14 @@ img:before {
   height: 8vh;
   font-size: calc(25px);
   background-color: var(--topbar-color);
-  vertical-align: middle;
-  text-align: center;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: center;
 }
 
-.Chat-info-container a {
-  height: 8vh;
+.Chat-info-link {
+  cursor: pointer;
 }
 
 .Chat-input-container {
@@ -133,7 +135,7 @@ img:before {
   flex-flow: row nowrap;
 }
 
-.Message.media {
+.Message img, audio, video {
   max-height: 700px;
 }
 
@@ -215,4 +217,23 @@ img:before {
 
 .modal-content {
   border-radius: 10px !important;
+}
+
+.modal-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: 0 6%;
+  margin: 0 auto;
+  border-bottom-color: #323842;
+  font-size: 25px
+}
+
+.pic-modal-dialog {
+  width: fit-content;
+  height: 80%;
 }

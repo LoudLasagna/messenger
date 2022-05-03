@@ -20,7 +20,7 @@ import { FiSend } from 'react-icons/fi';
 import { GrEmoji } from 'react-icons/gr';
 
 import fileApi from '../api/fileAPI';
-import UseChat from '../hooks/useChat'
+import UseChat from '../../hooks/useChat'
 import FileInput from './fileInput';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'emoji-mart/css/emoji-mart.css';
@@ -36,6 +36,7 @@ export default function MessageInput() {
 
   const dispatch = useDispatch();
   const file = useSelector((state) => state.file);
+  const fileChatId = useSelector((store) => store.fileChatId);
 
   let chatHook = UseChat(activeChat.id)
 
@@ -68,7 +69,7 @@ export default function MessageInput() {
 
     const message = { userId: currentUser.id, userName: currentUser.login, avatar: currentUser.avatar }
 
-    if (file) {
+    if (file && fileChatId === activeChat.id) {
       try {
         const path = await fileApi.upload({ file, chatId: activeChat.id })
         const type = file.type.split('/')[0]

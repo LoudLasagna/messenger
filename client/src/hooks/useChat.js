@@ -5,7 +5,7 @@ import {
 import { useSelector } from 'react-redux';
 import { io } from 'socket.io-client';
 
-import { SERVER_URL } from '../constants';
+import { SERVER_URL } from '../components/constants';
 
 export default function UseChat(chatId) {
   const [lusers, setUsers] = useState([])

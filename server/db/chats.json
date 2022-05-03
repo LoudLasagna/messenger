@@ -2,26 +2,29 @@
   "chats" :[
     {
       "id": "1",
-      "name": "arggarh",
-      "members": [
+      "name": "Информация",
+      "avatar": "/files/static/info.png",
+      "description": "Вся актуальная про эту платформу",
+      "admins": [
+          "ne@ya.ru"
+      ]
+    },
+    {
+      "id": "2",
+      "name": "Новости",
+      "avatar": "/files/static/news.png",
+      "description": "Все актуальные новости для самых лучших жителей самого приятного микрорайона",
+      "admins": [
           "ne@ya.ru",
           "ne2@ya.ru"
       ]
     },
     {
-      "id": "2",
-      "name": "тест2",
-      "members": [
-          "ne@ya.ru",
-          "ne2@ya.ru",
-          "ne3@ya.ru"
-      ]
-    },
-    {
       "id": "3",
-      "name": "тест3",
-      "members": [
-          "ne@ya.ru"
+      "name": "Общение",
+      "avatar": "/files/static/convos.png",
+      "description": "Чат для общения",
+      "admins": [
       ]
     }
   ]

@@ -16,7 +16,6 @@
     "express": "^4.17.3",
     "file-system": "^2.2.2",
     "lowdb": "^3.0.0",
-    "messenger-f": "file:..",
     "socket.io": "^4.4.1",
     "supervisor": "^0.12.0"
   },

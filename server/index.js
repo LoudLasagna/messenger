@@ -34,20 +34,16 @@ app.use(express.json())
 app.use('/upload', upload.single('file'), (req, res) => {
   if (!req.file) return res.sendStatus(400)
 
-  // формируем относительный путь к файлу
    const relativeFilePath = req.file.path
     .replace(/\\/g, '/')
     .split('server/files')[1]
 
-  // и возвращаем его
   res.status(201).json(relativeFilePath)
 })
 
 app.use('/files', (req, res) => {
-  // формируем абсолютный путь к файлу
   const filePath = getFilePath(req.url)
 
-  // и возвращаем файл по этому пути
   res.status(200).sendFile(filePath)
 })
 
@@ -68,6 +64,24 @@ app.post('/login', jsonParser, (req, res) => {
   }
   if (user) res.send({ auth: true, user })
   else res.send({ auth: false, errorMessage: 'неверный телефон или пароль' })
+})
+
+app.get('/get-chats', jsonParser, (req, res) => {
+  const data = fs.readFileSync('./db/chats.json');
+  const chats = JSON.parse(data).chats;
+  res.send({ chats })
+})
+
+app.get('/get-users', jsonParser, (req, res) => {
+  const data = fs.readFileSync('./db/users.json')
+  const users = JSON.parse(data).users.map((elem) => elem.email)
+  //console.log(users)
+  res.send(users);
+})
+
+app.post('/create-users', jsonParser, (req, res) => {
+  const newUsers = req.body
+  console.log(newUsers)
 })
 
 app.use(onError)

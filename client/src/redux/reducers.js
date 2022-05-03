@@ -1,7 +1,6 @@
 const defaultState = {
-  activeChat: { id: '-1' },
+  activeChat: { id: null },
   currentUser: {},
-  sessionId: '',
   file: null
 }
 
@@ -30,7 +29,8 @@ export default function reducers(state = defaultState, action) {
     case 'CHANGE_FILE':
       return {
         ...state,
-        file: action.file
+        file: action.file,
+        fileChatId: action.fileChatId
       }
       /* case 'SEND_MESSAGE':
       return {

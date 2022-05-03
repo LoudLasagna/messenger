@@ -9,38 +9,41 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable prefer-const */
 import {
-  React
+  React,
+  useState
 } from 'react';
+import { Modal } from 'react-bootstrap';
 import TimeAgo from 'react-timeago'
 import { SERVER_URL } from './constants'
 import 'bootstrap/dist/css/bootstrap.min.css';
-
 
 export default function Message(props) {
   const {
     userId, userName, avatar, content, createdAt, messageType
   } = props.messageData;
   const { currentUser } = props;
-  const contentStyle = { maxWidth: '100%', borderRadius: 10 }
+  const contentStyle = { maxWidth: '100%', borderRadius: 10, cursor: 'pointer' }
   const pathToFile = `${SERVER_URL}/files${content}`
+
+  const [showFS, setShowFS] = useState(false);
 
   let classes = 'Message'
 
   let element
+  let styledElement
+
   switch (messageType) {
     case 'text':
       element = content
       break
     case 'image':
-      classes += ' media'
-      element = <img src={pathToFile} alt="" style={contentStyle} />
+      element = <a onClick={() => setShowFS(true)}><img src={pathToFile} alt="" style={contentStyle} /></a>
+      styledElement = <img src={pathToFile} alt="" />
       break
     case 'audio':
-      classes += ' media'
       element = <audio src={pathToFile} controls />
       break
     case 'video':
-      classes += ' media'
       element = <video src={pathToFile} controls style={contentStyle} />
       break
     default:
@@ -61,6 +64,7 @@ export default function Message(props) {
           {element}
         </div>
       </div>
+      {messageType === 'image' && <Modal size="xl" centered dialogClassName="picModalDialog" show={showFS} onHide={() => setShowFS(false)}>{styledElement}</Modal>}
     </div>
   );
 }

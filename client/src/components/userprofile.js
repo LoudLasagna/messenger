@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {
   React,
   useState
@@ -5,6 +6,7 @@ import {
 import { Form, Button, Modal } from 'react-bootstrap';
 import { useSelector, useDispatch } from 'react-redux';
 import { FiEye } from 'react-icons/fi';
+import useLocalStorage from '../hooks/useLocalStorage';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function UserProfile() {
@@ -16,6 +18,9 @@ function UserProfile() {
   const [showNewPassword, setShowNewPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
+  const [storageEmail, setStorageEmail] = useLocalStorage('email');
+  const [storagePassword, setStoragePassword] = useLocalStorage('password');
+
   const [fields, setFields] = useState({
     login: userData.login,
     email: userData.email,
@@ -26,6 +31,15 @@ function UserProfile() {
 
   const [validated, setValidated] = useState(false)
   const [errors, setErrors] = useState({});
+
+  const leave = () => {
+    setStorageEmail('')
+    setStoragePassword('')
+    setTimeout(() => dispatch({
+      type: 'CHANGE_USER',
+      user: {}
+    }), 50)
+  }
 
   const validateInput = () => {
     let formIsValid = true;
@@ -102,21 +116,7 @@ function UserProfile() {
 
   return (
     <Form className="info-container" style={{ borderRadius: 'inherit' }}>
-      <Modal.Header
-        style={{
-          width: '100%',
-          display: 'flex',
-          alignItems: 'center',
-          top: 0,
-          right: 0,
-          bottom: 0,
-          left: 0,
-          padding: '0 6%',
-          margin: '0 auto',
-          borderBottomColor: '#323842'
-        }}
-        closeButton
-      >
+      <Modal.Header closeButton>
         <img src={userData.avatar} style={{ height: 100, width: 100 }} alt="av" className="avatar" />
         {fields.login}
       </Modal.Header>
@@ -182,11 +182,11 @@ function UserProfile() {
         )}
       </Modal.Body>
       <Modal.Footer style={{ justifyContent: 'center', borderTopColor: '#323842' }}>
+        <Button variant="danger" onClick={leave}>Выйти</Button>
         {
         edit
           ? (
             <>
-              <Button variant="danger">Выйти</Button>
               <Button variant="warning" onClick={() => setChangePassword((v) => !v)}>Изменить пароль</Button>
               <Button variant="primary" onClick={confirmChanges}> Подтвердить изменения </Button>
             </>

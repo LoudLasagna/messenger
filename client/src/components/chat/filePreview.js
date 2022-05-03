@@ -29,22 +29,25 @@ export default function FilePreview() {
   }
 
   const elemWrapStyle = {
-    backgroundColor: '#404652',
     postion: 'relative',
     height: '15vh',
     width: 'fit-content',
     inset: '0',
     margin: 'auto auto',
-    borderRadius: '5px'
+    borderRadius: '5px',
+    display: 'flex',
+    flexFlow: 'row nowrap',
+    alignItems: 'flex-start'
   }
 
   const elemStyle = {
+    backgroundColor: '#404652',
     height: 'inherit',
     borderRadius: '5px'
   }
 
   // извлекаем файл и метод для его обновления из хранилища
-  // локальное состояние для источника файлаs
+  // локальное состояние для источника файла
   const [src, setSrc] = useState()
   // локальное состояние для типа файла
   const [type, setType] = useState()
@@ -84,10 +87,16 @@ export default function FilePreview() {
           <button
             type="button"
             className="btn close"
-            // обнуляем файл при закрытии превью
+            style={{
+              color: 'white',
+              transform: 'translateX(-42px)',
+              backgroundColor: 'rgba(87, 87, 90, 0.63)',
+              borderRadius: '0 0 0 5px'
+            }}
+            // обнуляем файл при закрытии превьюs
             onClick={() => unsetFile()}
           >
-            <AiOutlineClose className="icon close" style={{ color: 'white' }} />
+            <AiOutlineClose className="icon close" />
           </button>
         </div>
       </div>

@@ -25,7 +25,7 @@ const upload = multer({
       filename: (_, file, cb) => {
         // названия файлов могут быть одинаковыми
         // добавляем к названию время с начала эпохи и дефис
-        const fileName = `${Date.now()}-${file.originalname}`
+        const fileName = `${Date.now()}-${file.originalname.replace(/\s+/g, '')}`
   
         cb(null, fileName)
       }
