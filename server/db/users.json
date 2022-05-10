@@ -1,5 +1,5 @@
 {
-  "users":[
+  "users": [
     {
       "id": "123129",
       "avatar": "/files/avatars/danny.jpg",
@@ -20,6 +20,20 @@
       "login": "nexman3",
       "email": "ne3@ya.ru",
       "password": "qwerty"
+    },
+    {
+      "id": "DqFimPyp",
+      "avatar": "/files/avatars/danny.jpg",
+      "login": "Саевский Никита Алексеевич",
+      "email": "nekit-saewsk2@yandex.ru",
+      "password": "P98kz19s"
+    },
+    {
+      "id": "EcjNSnKu",
+      "avatar": "/files/avatars/danny.jpg",
+      "login": "Саевский Никита Алексеевич",
+      "email": "nekit-saewsky@yandex.ru",
+      "password": "ZMAMRND4"
     }
   ]
 }

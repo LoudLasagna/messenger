@@ -3,6 +3,8 @@ import { createServer } from 'http'
 import path from 'path'
 import { Server } from 'socket.io'
 import express from 'express'
+import { nanoid } from 'nanoid'
+import { Low, JSONFileSync } from 'lowdb'
 
 import bodyParser from 'body-parser'
 import fs from "fs"
@@ -75,13 +77,22 @@ app.get('/get-chats', jsonParser, (req, res) => {
 app.get('/get-users', jsonParser, (req, res) => {
   const data = fs.readFileSync('./db/users.json')
   const users = JSON.parse(data).users.map((elem) => elem.email)
-  //console.log(users)
   res.send(users);
 })
 
-app.post('/create-users', jsonParser, (req, res) => {
-  const newUsers = req.body
-  console.log(newUsers)
+app.post('/create-users', jsonParser, async (req, res) => {
+  const newUsers = req.body.users
+  
+
+  const nu = newUsers.map((element) => {return { id: nanoid(8), avatar: "/files/avatars/danny.jpg", ...element }});  
+
+  const adapters = new JSONFileSync(`./db/users.json`)
+  const db = new Low(adapters)
+  await db.read()
+
+  nu.forEach((elem) => db.data.users.push(elem))
+  await db.write()
+  res.sendStatus(200)
 })
 
 app.use(onError)

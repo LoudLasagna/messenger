@@ -1,8 +1,6 @@
 /* eslint-disable no-unused-vars */
 import {
-  React,
-  useRef,
-  useState
+  React
 } from 'react';
 // eslint-disable-next-line no-unused-vars
 import { useSelector } from 'react-redux';
@@ -14,10 +12,10 @@ import useLocalStorage from './hooks/useLocalStorage';
 
 function App() {
   const userData = useSelector((state) => state.currentUser)
-  const [storageEmail, setstorageEmail] = useLocalStorage('email');
+  if (!userData.login) return <Navigate to="/login" />
   return (
     <div className="App">
-      { userData.login ? <Home /> : <Login />}
+      <Home />
     </div>
   )
 }

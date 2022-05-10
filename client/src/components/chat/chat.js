@@ -39,14 +39,6 @@ const users = [
   }
 ]
 
-function getWindowDimensions() {
-  const { innerWidth: width, innerHeight: height } = window;
-  return {
-    width,
-    height
-  };
-}
-
 export default function Chat() {
   const activeChat = useSelector((store) => store.activeChat);
   const currentUser = useSelector((store) => store.currentUser);
@@ -59,19 +51,9 @@ export default function Chat() {
   const handleClose = () => setShowChatDetails(false);
   const handleShow = () => setShowChatDetails(true);
 
-  const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions());
-
   const scrollToBottom = () => {
     messagesEnd.current?.scrollIntoView({ behavior: 'smooth' });
   }
-
-  useEffect(() => {
-    function handleResize() {
-      setWindowDimensions(getWindowDimensions());
-    }
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
 
   useEffect(() => {
     scrollToBottom()
@@ -88,7 +70,7 @@ export default function Chat() {
         </a>
         )}
       </div>
-      <div className="Chat-history" style={{ height: windowDimensions.height }}>
+      <div className="Chat-history" style={{ height: '100vh' }}>
         {
           // eslint-disable-next-line no-nested-ternary
           activeChat.id

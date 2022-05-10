@@ -17,7 +17,9 @@ ReactDOM.render(
   <Provider store={store}>
     <BrowserRouter>
       <Routes>
-        <Route path="*" element={<App />} />
+        <Route path="/" element={<App />} />
+        <Route path="/userprofile" element={<App />} />
+        <Route path="/login" element={<Login />} />
       </Routes>
     </BrowserRouter>
   </Provider>,
