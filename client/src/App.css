@@ -215,6 +215,16 @@ img:before {
   color: white;
 }
 
+.info-container input {
+  background-color: #58606e;
+  color: white;
+}
+
+.info-container input:disabled {
+  background-color: #2d3138;
+  color: white;
+}
+
 .modal-content {
   border-radius: 10px !important;
 }
@@ -236,4 +246,8 @@ img:before {
 .pic-modal-dialog {
   width: fit-content;
   height: 80%;
+}
+
+.TransparentBackground{
+  background-color: transparent;
 }

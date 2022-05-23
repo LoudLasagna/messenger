@@ -32,12 +32,6 @@ export default function reducers(state = defaultState, action) {
         file: action.file,
         fileChatId: action.fileChatId
       }
-      /* case 'SEND_MESSAGE':
-      return {
-        ...state,
-        messages: state.messages.slice().push(action.message)
-      }
-    case '' */
     default: return state
   }
 }

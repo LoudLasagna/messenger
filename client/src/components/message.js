@@ -1,13 +1,9 @@
 /* eslint-disable jsx-a11y/media-has-caption */
-/* eslint-disable react/destructuring-assignment */
-/* eslint-disable spaced-comment */
-/* eslint-disable no-multiple-empty-lines */
-/* eslint-disable react/no-array-index-key */
+/* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable jsx-a11y/anchor-is-valid */
+/* eslint-disable react/destructuring-assignment */
 /* eslint-disable react/prop-types */
-/* eslint-disable prefer-const */
 import {
   React,
   useState
@@ -25,20 +21,20 @@ export default function Message(props) {
   const contentStyle = { maxWidth: '100%', borderRadius: 10, cursor: 'pointer' }
   const pathToFile = `${SERVER_URL}/files${content}`
 
-  const [showFS, setShowFS] = useState(false);
+  const [showFullScreen, setShowFullScreen] = useState(false);
 
   let classes = 'Message'
 
   let element
-  let styledElement
+  let elementFullScreen
 
   switch (messageType) {
     case 'text':
       element = content
       break
     case 'image':
-      element = <a onClick={() => setShowFS(true)}><img src={pathToFile} alt="" style={contentStyle} /></a>
-      styledElement = <img src={pathToFile} alt="" />
+      element = <a onClick={() => setShowFullScreen(true)}><img src={pathToFile} alt="" style={contentStyle} /></a>
+      elementFullScreen = <img src={pathToFile} alt="" />
       break
     case 'audio':
       element = <audio src={pathToFile} controls />
@@ -64,7 +60,7 @@ export default function Message(props) {
           {element}
         </div>
       </div>
-      {messageType === 'image' && <Modal size="xl" centered dialogClassName="picModalDialog" show={showFS} onHide={() => setShowFS(false)}>{styledElement}</Modal>}
+      {messageType === 'image' && <Modal size="xl" centered dialogClassName="picModalDialog" show={showFullScreen} onHide={() => setShowFullScreen(false)}>{elementFullScreen}</Modal>}
     </div>
   );
 }

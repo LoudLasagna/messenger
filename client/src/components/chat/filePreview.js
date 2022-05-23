@@ -1,9 +1,7 @@
 /* eslint-disable jsx-a11y/media-has-caption */
-/* eslint-disable react/prop-types */
 import { useEffect, useState, React } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-// eslint-disable-next-line no-unused-vars
-import { AiOutlineClose, AiTwotoneCloseCircle } from 'react-icons/ai'
+import { AiOutlineClose } from 'react-icons/ai'
 
 export default function FilePreview() {
   const file = useSelector((store) => store.file);

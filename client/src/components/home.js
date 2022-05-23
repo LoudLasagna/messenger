@@ -1,11 +1,6 @@
-/* eslint-disable spaced-comment */
-/* eslint-disable no-multiple-empty-lines */
-/* eslint-disable react/no-array-index-key */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-/* eslint-disable react/prop-types */
-/* eslint-disable prefer-const */
 import {
   React,
   useState,
@@ -23,7 +18,7 @@ import { SERVER_URL } from './constants';
 
 function Home() {
   const dispatch = useDispatch();
-  const chatData = useSelector((state) => state.activeChat);
+
   const userData = useSelector((state) => state.currentUser);
 
   const [showUserProfile, setShowUserProfile] = useState(false);
@@ -71,8 +66,8 @@ function Home() {
           ))
         }
       </div>
-      <Chat props={chatData} />
-      <Modal show={showUserProfile} onHide={handleClose} centered>
+      <Chat />
+      <Modal show={showUserProfile} contentClassName="TransparentBackground" onHide={handleClose} centered>
         <UserProfile handleClose={handleClose} />
       </Modal>
     </>
@@ -80,4 +75,3 @@ function Home() {
 }
 
 export default Home;
-

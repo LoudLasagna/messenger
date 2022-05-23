@@ -1,9 +1,6 @@
-/* eslint-disable react/no-array-index-key */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-/* eslint-disable react/prop-types */
-/* eslint-disable prefer-const */
 import {
   useState,
   React,
@@ -14,30 +11,12 @@ import {
 import { Modal } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 
-// eslint-disable-next-line no-unused-vars
 import UseChat from '../../hooks/useChat'
 import MessageInput from './messageInput'
 import FilePreview from './filePreview';
 import Message from '../message';
-import gorg from '../../pics/gorg.jpg';
-import danny from '../../pics/danny.jpg';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'emoji-mart/css/emoji-mart.css';
-
-const users = [
-  {
-    id: '1',
-    avatar: gorg,
-    login: 'nexman',
-    password: 'qwerty'
-  },
-  {
-    id: '2',
-    avatar: danny,
-    login: 'nexman2',
-    password: 'qwerty'
-  }
-]
 
 export default function Chat() {
   const activeChat = useSelector((store) => store.activeChat);
@@ -78,11 +57,10 @@ export default function Chat() {
               ? (chatHook.messages.map((message, index) => {
                 const lastMessage = chatHook.messages.length - 1 === index
                 return (
-                  <Fragment key={index}>
+                  <Fragment key={message.id}>
                     <Message
                       messageData={message}
                       currentUser={currentUser.id}
-                      senderData={users.find((elem) => elem.email === message.email)}
                     />
                     {lastMessage && <div ref={messagesEnd} />}
                   </Fragment>

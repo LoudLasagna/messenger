@@ -1,12 +1,3 @@
-/* eslint-disable max-len */
-/* eslint-disable spaced-comment */
-/* eslint-disable no-multiple-empty-lines */
-/* eslint-disable react/no-array-index-key */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable jsx-a11y/anchor-is-valid */
-/* eslint-disable react/prop-types */
-/* eslint-disable prefer-const */
 import {
   useState,
   React,
@@ -25,7 +16,6 @@ import FileInput from './fileInput';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'emoji-mart/css/emoji-mart.css';
 
-
 export default function MessageInput() {
   const activeChat = useSelector((store) => store.activeChat);
   const currentUser = useSelector((store) => store.currentUser)
@@ -38,14 +28,13 @@ export default function MessageInput() {
   const file = useSelector((state) => state.file);
   const fileChatId = useSelector((store) => store.fileChatId);
 
-  let chatHook = UseChat(activeChat.id)
+  const chatHook = UseChat(activeChat.id)
 
   const handleEmojiShow = () => {
     setShowEmoji((v) => !v)
   }
 
   const handleEmojiSelect = (e) => {
-    // eslint-disable-next-line no-shadow
     ChangeInput(userInput + e.native)
   }
 
@@ -67,7 +56,11 @@ export default function MessageInput() {
     event.stopPropagation();
     if (submitDisabled) return
 
-    const message = { userId: currentUser.id, userName: currentUser.login, avatar: currentUser.avatar }
+    const message = {
+      userId: currentUser.id,
+      userName: currentUser.login,
+      avatar: currentUser.avatar
+    }
 
     if (file && fileChatId === activeChat.id) {
       try {
@@ -109,4 +102,3 @@ export default function MessageInput() {
     </>
   );
 }
-

@@ -65,7 +65,7 @@ app.post('/login', jsonParser, (req, res) => {
     }
   }
   if (user) res.send({ auth: true, user })
-  else res.send({ auth: false, errorMessage: 'неверный телефон или пароль' })
+  else res.send({ auth: false, errorMessage: 'неверная электронная почта или пароль' })
 })
 
 app.get('/get-chats', jsonParser, (req, res) => {
@@ -83,7 +83,6 @@ app.get('/get-users', jsonParser, (req, res) => {
 app.post('/create-users', jsonParser, async (req, res) => {
   const newUsers = req.body.users
   
-
   const nu = newUsers.map((element) => {return { id: nanoid(8), avatar: "/files/avatars/danny.jpg", ...element }});  
 
   const adapters = new JSONFileSync(`./db/users.json`)
@@ -110,17 +109,14 @@ const log = console.log
 
 const onConnection = (socket) => {
   log('User connected')
-
   const { chatId } = socket.handshake.query
   log('Sid: ' + chatId)
   socket.chatId = chatId
   socket.join(chatId)
-
   registerMessageHandler(io, socket)
-  registerUsersHandler(io, socket)
-  registerChatHandler(io, socket)
 
-  socket.onAny((eventName, data) => log(eventName, data))
+  //registerChatHandler(io, socket)
+  //socket.onAny((eventName, data) => log(eventName, data))
 
   socket.on('disconnect', () => {
     log('User disconnected')

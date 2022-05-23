@@ -1,5 +1,3 @@
-/* eslint-disable no-restricted-globals */
-/* eslint-disable no-unused-vars */
 import {
   React,
   useState
@@ -7,7 +5,7 @@ import {
 import axios from 'axios'
 import { Navigate } from 'react-router-dom'
 import { Form, Button } from 'react-bootstrap'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import useLocalStorage from '../hooks/useLocalStorage'
 import { SERVER_URL } from './constants'
 
@@ -15,28 +13,28 @@ export default function Login() {
   const dispatch = useDispatch();
   const [errors, setErrors] = useState('');
 
+  const currentUser = useSelector((store) => store.currentUser);
+
   const [storageEmail, setStorageEmail] = useLocalStorage('email');
   const [storagePassword, setStoragePassword] = useLocalStorage('password');
-
-  const [redirectingElement, setRE] = useState('');
 
   const [email, setEmail] = useState(storageEmail || '')
   const [password, setPassword] = useState(storagePassword || '');
 
   const handleChangeEmail = (e) => {
     setEmail(e.target.value)
-    console.log(email)
   }
+
   const handleChangePassword = (e) => {
     setPassword(e.target.value)
   }
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault()
     tryLogin()
   }
 
-  const tryLogin = async () => {
+  const tryLogin = () => {
     axios.post(`${SERVER_URL}/login`, {
       email,
       password
@@ -49,14 +47,13 @@ export default function Login() {
             type: 'CHANGE_USER',
             user: { ...response.data.user }
           })
-          setRE(<Navigate to="/" />)
         } else setErrors('Неверный email или пароль')
       })
   }
 
   if (storageEmail && storagePassword) tryLogin();
 
-  if (redirectingElement !== '') return redirectingElement;
+  if (currentUser.login) return <Navigate to="/" />;
   return (
     <div className="App">
       <Form

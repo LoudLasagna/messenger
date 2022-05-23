@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
+import { USER_KEY } from '../components/constants';
 
-const PREFIX = 'messenger-d-';
+const PREFIX = USER_KEY;
 
 export default function useLocalStorage(key, initialValue) {
   const prefixedKey = PREFIX + key;
