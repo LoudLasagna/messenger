@@ -1,0 +1,34 @@
+{
+  "messages": [
+    {
+      "messageId": "qdMEMHzr",
+      "createdAt": "2022-05-27T13:42:13.510Z",
+      "chatId": "3",
+      "userId": "12310",
+      "userName": "nexman2",
+      "avatar": "/files/avatars/gorg.jpg",
+      "messageType": "text",
+      "content": "Тестовое сообщение"
+    },
+    {
+      "messageId": "aakZLXJZ",
+      "createdAt": "2022-05-27T13:42:22.124Z",
+      "chatId": "3",
+      "userId": "12310",
+      "userName": "nexman2",
+      "avatar": "/files/avatars/gorg.jpg",
+      "messageType": "image",
+      "content": "/3/1653658942116-ABx95UWYgxN3qVIawZz3KDAoOMHFRSTLU93DRkykZcgvBkyF9zm7mD6b23KJv1MUbzzZ2XHK7-TctUeXGLFWhQSg.jpg"
+    },
+    {
+      "messageId": "Nos55Bv1",
+      "createdAt": "2022-05-27T20:59:26.788Z",
+      "chatId": "3",
+      "userId": "DqFimPyp",
+      "userName": "Саевский Никита Алексеевич",
+      "avatar": "/files/avatars/danny.jpg",
+      "messageType": "text",
+      "content": "тестовое сообщение"
+    }
+  ]
+}

@@ -7,6 +7,9 @@ import { Low, JSONFileSync } from 'lowdb'
 let adapters = new JSONFileSync('db/messages.json')
 let db = new Low(adapters)
 await db.read()
+let adapterUsers = new JSONFileSync('db/users.json')
+let dbUsers = new Low(adapterUsers)
+await dbUsers.read()
 
 const _dirname = dirname(fileURLToPath(import.meta.url))
 
@@ -25,6 +28,12 @@ async function readMessages (chatId) {
 export default (io, socket) => {
   const getMessages = async () => {
     const data = await readMessages(socket.chatId)
+    data.messages.forEach((message) => {
+      const user = dbUsers.data.users.find((elem) => elem.id === message.userId);
+      message.userName = user.login;
+      message.avatar = user.avatar
+    })
+
     io.in(socket.chatId).emit('messages', data.messages)
   }
 

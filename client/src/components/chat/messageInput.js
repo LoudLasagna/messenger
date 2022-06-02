@@ -57,9 +57,7 @@ export default function MessageInput() {
     if (submitDisabled) return
 
     const message = {
-      userId: currentUser.id,
-      userName: currentUser.login,
-      avatar: currentUser.avatar
+      userId: currentUser.id
     }
 
     if (file && fileChatId === activeChat.id) {

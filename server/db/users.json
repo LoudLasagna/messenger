@@ -2,38 +2,35 @@
   "users": [
     {
       "id": "123129",
-      "avatar": "/files/avatars/danny.jpg",
+      "avatar": "/avatars/danny.jpg",
       "login": "nexman",
       "email": "ne@ya.ru",
-      "password": "qwerty"
+      "password": "qwerty",
+      "rights": "admin"
     },
     {
       "id": "12310",
-      "avatar": "/files/avatars/gorg.jpg",
-      "login": "nexman2",
+      "avatar": "/avatars/1654021106518-qmYV5fuwrBc8aFrkCIU9DzYy4VafrstW7EQxjUwRCQfmt86zvv24XcJ6W0iqNMeZRDHR2KZzf1ty_PqBMmp85svN.jpg",
+      "login": "nexman2323",
       "email": "ne2@ya.ru",
-      "password": "qwerty"
+      "password": "qwerty",
+      "rights": "admin"
     },
     {
       "id": "1231239",
-      "avatar": "/files/avatars/smiley.jpg",
+      "avatar": "/avatars/smiley.jpg",
       "login": "nexman3",
       "email": "ne3@ya.ru",
-      "password": "qwerty"
+      "password": "qwerty",
+      "rights": "admin"
     },
     {
       "id": "DqFimPyp",
-      "avatar": "/files/avatars/danny.jpg",
-      "login": "Саевский Никита Алексеевич",
+      "avatar": "/avatars/1654020911348-ABx95UWYgxN3qVIawZz3KDAoOMHFRSTLU93DRkykZcgvBkyF9zm7mD6b23KJv1MUbzzZ2XHK7-TctUeXGLFWhQSg.jpg",
+      "login": "Саевский Никита Алексеевичxxx",
       "email": "nekit-saewsk2@yandex.ru",
-      "password": "P98kz19s"
-    },
-    {
-      "id": "EcjNSnKu",
-      "avatar": "/files/avatars/danny.jpg",
-      "login": "Саевский Никита Алексеевич",
-      "email": "nekit-saewsky@yandex.ru",
-      "password": "ZMAMRND4"
+      "password": "P98kz19s",
+      "rights": "user"
     }
   ]
 }

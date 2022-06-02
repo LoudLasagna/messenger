@@ -1,0 +1,22 @@
+{
+  "messages": [
+    {
+      "messageId": "-Te4S0uI",
+      "createdAt": "2022-06-02T17:29:25.234Z",
+      "chatId": "sOOameum",
+      "userId": "12310",
+      "messageType": "text",
+      "content": "абоба",
+      "userName": "nexman2323",
+      "avatar": "/avatars/1654021106518-qmYV5fuwrBc8aFrkCIU9DzYy4VafrstW7EQxjUwRCQfmt86zvv24XcJ6W0iqNMeZRDHR2KZzf1ty_PqBMmp85svN.jpg"
+    },
+    {
+      "messageId": "OYS2xA3Z",
+      "createdAt": "2022-06-02T17:29:46.220Z",
+      "chatId": "sOOameum",
+      "userId": "12310",
+      "messageType": "image",
+      "content": "/sOOameum/1654190986184-qmYV5fuwrBc8aFrkCIU9DzYy4VafrstW7EQxjUwRCQfmt86zvv24XcJ6W0iqNMeZRDHR2KZzf1ty_PqBMmp85svN.jpg"
+    }
+  ]
+}

@@ -1,7 +1,9 @@
 const defaultState = {
   activeChat: { id: null },
   currentUser: {},
-  file: null
+  file: null,
+  selectedAvatar: null,
+  selectedChatAvatar: null
 }
 
 export default function reducers(state = defaultState, action) {
@@ -32,6 +34,17 @@ export default function reducers(state = defaultState, action) {
         file: action.file,
         fileChatId: action.fileChatId
       }
+    case 'CHANGE_SELECTED_AVATAR':
+      return {
+        ...state,
+        selectedAvatar: action.selectedAvatar
+      }
+    case 'CHANGE_CHAT_AVATAR':
+      return {
+        ...state,
+        selectedChatAvatar: action.selectedAvatar
+      }
+
     default: return state
   }
 }

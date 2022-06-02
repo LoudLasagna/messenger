@@ -4,7 +4,6 @@ import {
 import { useSelector, useDispatch } from 'react-redux';
 import { MdAttachFile } from 'react-icons/md'
 
-// eslint-disable-next-line react/prop-types
 export default function FileInput() {
   const file = useSelector((store) => store.file);
   const activeChat = useSelector((store) => store.activeChat);

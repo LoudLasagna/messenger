@@ -4,34 +4,23 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AiOutlineClose } from 'react-icons/ai'
 
 export default function FilePreview() {
-  const file = useSelector((store) => store.file);
-  const dispatch = useDispatch()
-  function unsetFile() {
-    dispatch({
-      type: 'CHANGE_FILE',
-      file: null
-    })
-  }
-
   const bufferStyle = {
     width: '100%',
     minHeight: '15vh'
   }
 
   const style = {
-    width: window.innerWidth - 330,
+    width: 'fit-content',
     height: '15vh',
-    left: 330,
-    bottom: '7vh',
-    position: 'absolute'
+    position: 'absolute',
+    right: 0,
+    bottom: 60,
+    left: 0,
+    margin: 'auto'
   }
 
   const elemWrapStyle = {
-    postion: 'relative',
     height: '15vh',
-    width: 'fit-content',
-    inset: '0',
-    margin: 'auto auto',
     borderRadius: '5px',
     display: 'flex',
     flexFlow: 'row nowrap',
@@ -44,13 +33,18 @@ export default function FilePreview() {
     borderRadius: '5px'
   }
 
-  // извлекаем файл и метод для его обновления из хранилища
-  // локальное состояние для источника файла
-  const [src, setSrc] = useState()
-  // локальное состояние для типа файла
-  const [type, setType] = useState()
+  const file = useSelector((store) => store.file);
+  const dispatch = useDispatch()
+  function unsetFile() {
+    dispatch({
+      type: 'CHANGE_FILE',
+      file: null
+    })
+  }
 
-  // при наличии файла обновляем источник и тип файла
+  const [src, setSrc] = useState()
+
+  const [type, setType] = useState()
   useEffect(() => {
     if (file) {
       setSrc(URL.createObjectURL(file))
@@ -58,7 +52,6 @@ export default function FilePreview() {
     }
   }, [file])
 
-  // элемент для рендеринга зависит от типа файла
   let element
 
   switch (type) {

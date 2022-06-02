@@ -1,5 +1,6 @@
 import {
   React,
+  useEffect,
   useState
 } from 'react'
 import axios from 'axios'
@@ -29,12 +30,7 @@ export default function Login() {
     setPassword(e.target.value)
   }
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    tryLogin()
-  }
-
-  const tryLogin = () => {
+  const handleLogin = () => {
     axios.post(`${SERVER_URL}/login`, {
       email,
       password
@@ -45,13 +41,25 @@ export default function Login() {
           setStoragePassword(password)
           dispatch({
             type: 'CHANGE_USER',
-            user: { ...response.data.user }
+            user: {
+              ...response.data.user,
+              avatar: `${SERVER_URL}/files${response.data.user.avatar}`
+            }
           })
         } else setErrors('Неверный email или пароль')
       })
   }
 
-  if (storageEmail && storagePassword) tryLogin();
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    handleLogin()
+  }
+
+  useEffect(() => {
+    if (storageEmail && storagePassword && storageEmail.length > 0 && storagePassword.length > 0) {
+      handleLogin();
+    }
+  }, [])
 
   if (currentUser.login) return <Navigate to="/" />;
   return (

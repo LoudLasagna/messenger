@@ -1,22 +1,22 @@
 {
-  "chats" :[
+  "chats": [
     {
       "id": "1",
       "name": "Информация",
       "avatar": "/files/static/info.png",
       "description": "Вся актуальная про эту платформу",
       "admins": [
-          "ne@ya.ru"
+        "ne@ya.ru"
       ]
     },
     {
       "id": "2",
-      "name": "Новости",
-      "avatar": "/files/static/news.png",
-      "description": "Все актуальные новости для самых лучших жителей самого приятного микрорайона",
+      "name": "Новости2345",
+      "avatar": "/files/avatars/1654115347965-peepeepoopoo.gif",
+      "description": "Все актуальные новости для самых лучших жителей самого п",
       "admins": [
-          "ne@ya.ru",
-          "ne2@ya.ru"
+        "ne@ya.ru",
+        "ne2@ya.ru"
       ]
     },
     {
@@ -24,8 +24,16 @@
       "name": "Общение",
       "avatar": "/files/static/convos.png",
       "description": "Чат для общения",
+      "admins": []
+    },
+    {
+      "name": "Тест чат",
+      "description": "тестирую штуковину",
       "admins": [
-      ]
+        "ne2@ya.ru"
+      ],
+      "id": "sOOameum",
+      "avatar": "/files/static/placeholder.png"
     }
   ]
 }
