@@ -9,9 +9,11 @@ import {
 import { useMediaQuery } from 'react-responsive';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Modal, Button, Form } from 'react-bootstrap';
+import {
+  Modal, Button, Form, ButtonGroup, ToggleButton
+} from 'react-bootstrap';
 import axios from 'axios';
-import { FiArrowLeft } from 'react-icons/fi';
+import { FiArrowLeft, FiX } from 'react-icons/fi';
 import UserProfile from './userProfile/userprofile';
 import Chat from './chat/chat';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -32,7 +34,9 @@ function Home() {
   const [rotation, setRotation] = useState(0);
 
   const [showChatModal, setShowChatModal] = useState(false);
-  const [newChatFields, setNewChatFields] = useState({ name: '', description: '', admins: [userData.email] })
+  const [newChatFields, setNewChatFields] = useState({
+    name: '', description: '', admins: [userData.email], whoCanWrite: 'everyone'
+  })
 
   const getChats = () => {
     axios.get(`${SERVER_URL}/get-chats`)
@@ -84,6 +88,17 @@ function Home() {
     })
   }
 
+  const deleteChat = (id) => {
+    // axios.post(`${SERVER_URL}/remove-chat/${id}`);
+  }
+
+  const btnStyle = {
+    marginLeft: 'auto',
+    borderRadius: '10px',
+    height: 30,
+    width: 30,
+    padding: 0
+  }
   return (
     <>
       <div className={isMobile ? 'Chats-container m' : 'Chats-container'} style={showMenu && isMobile ? { left: 0 } : {}}>
@@ -110,6 +125,7 @@ function Home() {
           <div key={chat.id} className="Chat" onClick={() => ChatOnClick(chat)}>
             <img src={`${SERVER_URL}${chat.avatar}`} alt="av" className="chat-avatar" />
             {chat.name}
+            {chat.admins.find((elem) => elem === userData.email) && <Button variant="btn btn-danger" style={btnStyle} onClick={() => deleteChat(chat.id)}><FiX style={{ width: 23, height: 23 }} /></Button>}
           </div>
         ))
         }
@@ -137,6 +153,31 @@ function Home() {
             <Form.Group className="mb-3">
               <Form.Label>Описание:</Form.Label>
               <Form.Control type="text" name="description" placeholder="Сюда идёт описание" value={newChatFields.email} onChange={handleChange} required />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Кто может писать:  </Form.Label>
+              <ButtonGroup className="m-2">
+                <ToggleButton
+                  type="radio"
+                  variant="outline-success"
+                  name="whoCanWrite"
+                  value="everyone"
+                  checked={newChatFields.whoCanWrite === 'everyone'}
+                  onClick={() => setNewChatFields((v) => ({ ...v, whoCanWrite: 'everyone' }))}
+                >
+                  Все
+                </ToggleButton>
+                <ToggleButton
+                  type="radio"
+                  variant="outline-danger"
+                  name="whoCanWrite"
+                  value="admins"
+                  checked={newChatFields.whoCanWrite === 'admins'}
+                  onClick={() => setNewChatFields((v) => ({ ...v, whoCanWrite: 'admins' }))}
+                >
+                  Администраторы
+                </ToggleButton>
+              </ButtonGroup>
             </Form.Group>
           </Modal.Body>
           <Modal.Footer style={{ borderTop: '1px solid #323842' }} className="info-container">

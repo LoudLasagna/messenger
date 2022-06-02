@@ -94,7 +94,7 @@ input:focus {
 
 .Chats-container {
   min-height: 100vh;
-  width: 330px;
+  width: 400px;
   background-color: var(--sidebar-color);
 }
 

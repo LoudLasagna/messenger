@@ -141,6 +141,18 @@ app.get('/get-chats', jsonParser, (req, res) => {
   res.send({ chats })
 })
 
+app.post('/remove-chat/:id', async (req, res) => {
+  const adapters = new JSONFileSync(`./db/chats.json`)
+  const db = new Low(adapters)
+  await db.read()
+
+  const chatIndex = db.data.chats.findIndex((elem) => elem.id === req.params.id);
+  if (findIndex !== -1) db.data.splice(chatIndex, 1);
+
+  await db.write()
+  res.sendStatus(200)
+})
+
 app.get('/get-users', jsonParser, (req, res) => {
   const data = fs.readFileSync('./db/users.json')
   const users = JSON.parse(data).users.map((elem) => elem.email)

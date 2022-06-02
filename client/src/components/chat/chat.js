@@ -34,6 +34,18 @@ export default function Chat() {
   const handleClose = () => setShowChatDetails(false);
   const handleShow = () => setShowChatDetails(true);
 
+  const [showInput, setShowInput] = useState(true);
+
+  useEffect(() => {
+    setShowInput(true)
+    if (activeChat.whoCanWrite === 'admins') {
+      setShowInput(false)
+      if (activeChat.admins.find((elem) => elem === currentUser.email)) {
+        setShowInput(true);
+      }
+    }
+  }, [activeChat])
+
   const scrollToBottom = () => {
     messagesEnd.current?.scrollIntoView({ behavior: 'smooth' });
   }
@@ -53,7 +65,7 @@ export default function Chat() {
         </a>
         )}
       </div>
-      <div className="Chat-history">
+      <div className="Chat-history" style={showInput ? {} : { height: 'calc(100vh - 80px)' }}>
         {
           // eslint-disable-next-line no-nested-ternary
           activeChat.id
@@ -76,7 +88,7 @@ export default function Chat() {
         }
         {file && fileChatId === activeChat.id && <FilePreview />}
       </div>
-      { activeChat.id && activeChat.id !== '-1' && (<MessageInput sendMessage={chatHook.sendMessage} />) }
+      {activeChat.id && showInput && <MessageInput sendMessage={chatHook.sendMessage} />}
       <Modal show={showChatDetails} onHide={handleClose} centered>
         <ChatInfo />
       </Modal>

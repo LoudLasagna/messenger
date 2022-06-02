@@ -7,7 +7,8 @@
       "description": "Вся актуальная про эту платформу",
       "admins": [
         "ne@ya.ru"
-      ]
+      ],
+      "whoCanWrite": "admins"
     },
     {
       "id": "2",
@@ -17,23 +18,36 @@
       "admins": [
         "ne@ya.ru",
         "ne2@ya.ru"
-      ]
+      ],
+      "whoCanWrite": "admins"
     },
     {
       "id": "3",
       "name": "Общение",
       "avatar": "/files/static/convos.png",
       "description": "Чат для общения",
-      "admins": []
+      "admins": [],
+      "whoCanWrite": "everyone"
     },
     {
-      "name": "Тест чат",
-      "description": "тестирую штуковину",
+      "name": "Test chat 3333",
+      "description": "asdsadasd",
       "admins": [
         "ne2@ya.ru"
       ],
-      "id": "sOOameum",
+      "whoCanWrite": "admins",
+      "id": "haf2oX8m",
       "avatar": "/files/static/placeholder.png"
+    },
+    {
+      "id": "DJ3Habvb",
+      "name": "Test chat dlya vseh",
+      "avatar": "/files/static/placeholder.png",
+      "description": "sadasd",
+      "admins": [
+        "ne2@ya.ru"
+      ],
+      "whoCanWrite": "everyone"
     }
   ]
 }

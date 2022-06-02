@@ -10,7 +10,9 @@ import {
   Button,
   Modal,
   ListGroup,
-  ListGroupItem
+  ListGroupItem,
+  ButtonGroup,
+  ToggleButton
 } from 'react-bootstrap';
 import { useSelector, useDispatch } from 'react-redux';
 import { FiPlus, FiCheck, FiX } from 'react-icons/fi';
@@ -26,14 +28,15 @@ export default function ChatInfo() {
   const selectedChatAvatar = useSelector((store) => store.selectedChatAvatar);
 
   const [edit, setEdit] = useState(false);
-  const [rights, setRights] = useState('user');
 
   const [chatName, setName] = useState(activeChat.name);
   const [description, setDescription] = useState(activeChat.description);
+  const [whoCanWrite, setWhoCanWrite] = useState(activeChat.whoCanWrite);
   const [admins, setAdmins] = useState([]);
 
   const [message, setMessage] = useState('');
 
+  const [rights, setRights] = useState('user');
   useEffect(() => {
     if (activeChat) {
       axios.get(`${SERVER_URL}/chat/${activeChat.id}/admins`)
@@ -53,7 +56,8 @@ export default function ChatInfo() {
       name: chatName,
       avatar: activeChat.avatar,
       description,
-      admins
+      admins,
+      whoCanWrite
     }
     if (selectedChatAvatar) {
       try {
@@ -125,7 +129,32 @@ export default function ChatInfo() {
           ? (
             <>
               <Form.Control as="textarea" name="description" onChange={(e) => setDescription(e.target.value)} value={description} style={{ fontSize: '20px' }} />
-              <ListGroup className="list-group-flush pt-4">
+              <Form.Group className="mt-2">
+                <Form.Label>Кто может писать:  </Form.Label>
+                <ButtonGroup style={{ marginLeft: '.5rem', width: '' }}>
+                  <ToggleButton
+                    type="radio"
+                    variant="outline-success"
+                    name="whoCanWrite"
+                    value="everyone"
+                    checked={whoCanWrite === 'everyone'}
+                    onClick={() => setWhoCanWrite('everyone')}
+                  >
+                    Все
+                  </ToggleButton>
+                  <ToggleButton
+                    type="radio"
+                    variant="outline-danger"
+                    name="whoCanWrite"
+                    value="admins"
+                    checked={whoCanWrite === 'admins'}
+                    onClick={(() => setWhoCanWrite('admins'))}
+                  >
+                    Администраторы
+                  </ToggleButton>
+                </ButtonGroup>
+              </Form.Group>
+              <ListGroup className="list-group-flush pt-2">
                 <ListGroupItem style={{ backgroundColor: 'var(--sidebar-color)', color: 'white' }}>
                   Список администраторов:
                   <Button disabled={addAdmin} className="btn-secondary" style={{ marginLeft: 'auto' }} onClick={() => setAddAdmin(true)}>

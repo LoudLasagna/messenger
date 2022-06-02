@@ -65,7 +65,7 @@ export default function Login() {
   return (
     <div className="App">
       <Form
-        className="mt-5"
+        className="mt-5 info-container"
         style={{
           maxWidth: '320px',
           margin: '0 auto',
