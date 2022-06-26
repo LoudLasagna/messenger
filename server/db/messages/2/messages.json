@@ -1,33 +1,5 @@
 {
   "messages": [
-    {
-      "messageId": "YrQhKy6G",
-      "createdAt": "2022-04-12T13:14:22.825Z",
-      "chatId": "2",
-      "userId": "12310",
-      "userName": "nexman2",
-      "messageType": "text",
-      "content": "heyop"
-    },
-    {
-      "messageId": "LLLLfvdl",
-      "createdAt": "2022-04-20T16:28:45.888Z",
-      "chatId": "2",
-      "userId": "123129",
-      "userName": "nexman",
-      "avatar": "/files/avatars/danny.jpg",
-      "messageType": "text",
-      "content": "тест тест"
-    },
-    {
-      "messageId": "zAJMCMgf",
-      "createdAt": "2022-04-26T19:33:20.806Z",
-      "chatId": "2",
-      "userId": "12310",
-      "userName": "nexman2",
-      "avatar": "/files/avatars/gorg.jpg",
-      "messageType": "text",
-      "content": "asdasdsad"
-    }
+  
   ]
 }

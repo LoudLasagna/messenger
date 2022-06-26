@@ -53,8 +53,12 @@ app.use('/files', (req, res) => {
 
 app.use('/chat/:id/admins', (req, res) => {
   const data = fs.readFileSync('./db/chats.json');
-  const chatAdmins = JSON.parse(data).chats.find((elem) => elem.id === req.params.id).admins;
-  res.send(chatAdmins);
+  let admins = [];
+
+  console.log(req.params.id.split('-')[0]);
+  if (req.params.id.split('-')[0] === 'applications') admins = JSON.parse(data).dialogues.find((elem) => elem.id === req.params.id).admins;
+  else admins = JSON.parse(data).chats.find((elem) => elem.id === req.params.id).admins;
+  res.send(admins);
 })
 
 app.post('/login', jsonParser, (req, res) => {
@@ -135,10 +139,31 @@ app.post('/change-adminlist', jsonParser, async (req, res) => {
   res.sendStatus(200)
 })
 
-app.get('/get-chats', jsonParser, (req, res) => {
-  const data = fs.readFileSync('./db/chats.json');
-  const chats = JSON.parse(data).chats;
-  res.send({ chats })
+app.get('/get-chats/:id', jsonParser, (req, res) => {
+  const userId = req.params.id;
+
+  const usersData = fs.readFileSync('./db/users.json');
+  const rights = JSON.parse(usersData).users.find((elem) => elem.id === userId).rights;
+
+  const chatsData = fs.readFileSync('./db/chats.json');
+  const chats = JSON.parse(chatsData).chats;
+
+  const dialogues = JSON.parse(chatsData).dialogues;
+
+  let response = [];
+  if (rights === 'admin') {
+    response = chats.concat(dialogues);
+  } else {
+    const dialogue = dialogues.find((elem) => elem.id.split('-')[1] === userId);
+    if (dialogue) {
+      response = chats.concat(dialogue);
+    } else {
+      response = chats.slice()
+    }
+  }
+
+  console.log(response)
+  res.send({ chats: response })
 })
 
 app.post('/remove-chat/:id', async (req, res) => {
@@ -147,7 +172,7 @@ app.post('/remove-chat/:id', async (req, res) => {
   await db.read()
 
   const chatIndex = db.data.chats.findIndex((elem) => elem.id === req.params.id);
-  if (findIndex !== -1) db.data.splice(chatIndex, 1);
+  if (chatIndex !== -1) db.data.chats.splice(chatIndex, 1);
 
   await db.write()
   res.sendStatus(200)
@@ -167,9 +192,34 @@ app.post('/create-users', jsonParser, async (req, res) => {
   const adapters = new JSONFileSync(`./db/users.json`)
   const db = new Low(adapters)
   await db.read()
-
+  const admins = [];
+  db.data.users.forEach((elem) => {
+    if (elem.rights === "admin") admins.push(elem.email)
+  })
   nu.forEach((elem) => db.data.users.push(elem))
+
   await db.write()
+
+  const chatAdapters = new JSONFileSync(`./db/chats.json`)
+  const chatDb = new Low(chatAdapters)
+
+  await chatDb.read()
+  
+  if (nu[0].rights === 'user'){
+    nu.forEach((elem) => {
+      chatDb.data.dialogues.push({
+        id: `applications-${elem.id}`,
+        name: `Заявления ${elem.login}`,
+        avatar: "/files/static/placeholder.png",
+        description: `Чат для отправки заявлений представлителям управляющей компании`,
+        admins,
+        whoCanWrite: "everyone"
+      })
+    })
+}
+
+  await chatDb.write()
+
   res.sendStatus(200)
 })
 

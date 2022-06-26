@@ -12,9 +12,9 @@
     },
     {
       "id": "2",
-      "name": "Новости2345",
-      "avatar": "/files/avatars/1654115347965-peepeepoopoo.gif",
-      "description": "Все актуальные новости для самых лучших жителей самого п",
+      "name": "Новости",
+      "avatar": "/files/static/news.png",
+      "description": "Все актуальные новости для самых лучших жителей самого приятного района",
       "admins": [
         "ne@ya.ru",
         "ne2@ya.ru"
@@ -26,28 +26,13 @@
       "name": "Общение",
       "avatar": "/files/static/convos.png",
       "description": "Чат для общения",
-      "admins": [],
-      "whoCanWrite": "everyone"
-    },
-    {
-      "name": "Test chat 3333",
-      "description": "asdsadasd",
       "admins": [
-        "ne2@ya.ru"
-      ],
-      "whoCanWrite": "admins",
-      "id": "haf2oX8m",
-      "avatar": "/files/static/placeholder.png"
-    },
-    {
-      "id": "DJ3Habvb",
-      "name": "Test chat dlya vseh",
-      "avatar": "/files/static/placeholder.png",
-      "description": "sadasd",
-      "admins": [
+        "ne@ya.ru",
         "ne2@ya.ru"
       ],
       "whoCanWrite": "everyone"
     }
+  ],
+  "dialogues": [
   ]
 }

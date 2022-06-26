@@ -3,7 +3,7 @@
     {
       "id": "123129",
       "avatar": "/avatars/danny.jpg",
-      "login": "nexman",
+      "login": "Саевский Н.А.",
       "email": "ne@ya.ru",
       "password": "qwerty",
       "rights": "admin"
@@ -30,6 +30,22 @@
       "login": "Саевский Никита Алексеевичxxx",
       "email": "nekit-saewsk2@yandex.ru",
       "password": "P98kz19s",
+      "rights": "user"
+    },
+    {
+      "id": "DqFimPyp2",
+      "avatar": "/avatars/1654020911348-ABx95UWYgxN3qVIawZz3KDAoOMHFRSTLU93DRkykZcgvBkyF9zm7mD6b23KJv1MUbzzZ2XHK7-TctUeXGLFWhQSg.jpg",
+      "login": "Саевский БИКИТА",
+      "email": "nekit-saewsk333@yandex.ru",
+      "password": "qwerty",
+      "rights": "user"
+    },
+    {
+      "id": "UNqFPpcc",
+      "avatar": "/static/placeholder.jpg",
+      "login": "тест",
+      "email": "nenene@yandex.ru",
+      "password": "nn46FIbH",
       "rights": "user"
     }
   ]
